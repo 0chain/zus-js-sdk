@@ -1,0 +1,120 @@
+module.exports = {
+  env: {
+    es6: true,
+    node: true,
+  },
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jsdoc/recommended",
+    "google",
+    "prettier",
+    "prettier/@typescript-eslint",
+  ],
+  rules: {
+    "jsdoc/newline-after-description": "off",
+    "jsdoc/require-jsdoc": ["warn", { publicOnly: true }],
+    "no-restricted-globals": ["error", "name", "length"],
+    "prefer-arrow-callback": "error",
+    "prettier/prettier": "error",
+    "require-atomic-updates": "off",
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off",
+    "no-prototype-builtins": "warn",
+    "no-useless-escape": "warn",
+    "prefer-promise-reject-errors": "warn",
+  },
+  overrides: [
+    {
+      files: ["*.ts"],
+      rules: {
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-returns-type": "off",
+
+        "jsdoc/require-param": "off",
+        "jsdoc/require-returns": "off",
+
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": ["error"],
+
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/explicit-function-return-type": [
+          "warn",
+          { allowExpressions: true },
+        ],
+        "@typescript-eslint/no-extra-non-null-assertion": "warn",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/no-misused-promises": "warn",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "warn",
+        "@typescript-eslint/no-unsafe-call": "warn", //
+        "@typescript-eslint/no-unsafe-member-access": "warn",
+        "@typescript-eslint/no-unsafe-return": "warn",
+        "@typescript-eslint/no-use-before-define": [
+          "warn",
+          { functions: false, typedefs: false },
+        ],
+        "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/prefer-includes": "warn",
+        "@typescript-eslint/prefer-regexp-exec": "warn",
+        "@typescript-eslint/prefer-string-starts-ends-with": "warn",
+        "@typescript-eslint/restrict-plus-operands": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "no-case-declarations": "warn",
+        "no-constant-condition": "warn",
+        "no-fallthrough": "warn",
+        "no-unused-vars": "warn",
+        camelcase: ["warn", { ignoreDestructuring: true }],
+      },
+    },
+    {
+      files: ["*.js"],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/no-this-alias": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/prefer-includes": "off",
+        "@typescript-eslint/prefer-regexp-exec": "off",
+        "@typescript-eslint/restrict-plus-operands": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/unbound-method": "off",
+
+        "no-var": "off",
+        "prefer-arrow-callback": "off",
+      },
+    },
+    {
+      files: ["*.spec.*"],
+      env: {
+        mocha: true,
+      },
+      rules: {},
+    },
+  ],
+  globals: {},
+  parserOptions: {
+    ecmaVersion: "2017",
+    project: ["tsconfig.json", "tsconfig.dev.json"],
+    sourceType: "module",
+    warnOnUnsupportedTypeScriptVersion: false,
+  },
+  plugins: ["prettier", "@typescript-eslint", "jsdoc"],
+  settings: {
+    jsdoc: {
+      tagNamePreference: {
+        returns: "return",
+      },
+    },
+  },
+  parser: "@typescript-eslint/parser",
+};
