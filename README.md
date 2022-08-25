@@ -15,24 +15,13 @@ npm install zus-sdk
 ### Usage
 
 ```js
-import ZUS from 'zus-sdk';
+import zus from 'zus-sdk';
 
-const zus = new ZUS().init({
-  provider: 'http://localhost:8545',
-  networkId: '1',
-  chainId: '1',
-  gasPrice: '1000000000',
-  gasLimit: '21000',
-  from: '0x0000000000000000000000000000000000000000',
-  privateKey: '0x0000000000000000000000000000000000000000000000000000000000000000',
-});
+zus.registerClient(config)
 
-zus.getBalance('0x0000000000000000000000000000000000000000').then(console.log);
+zus.restoreWallet(mnemonic)
 
-zus.getTransactionCount('0x0000000000000000000000000000000000000000').then(console.log);
-
-
-zus.getBlockNumber().then(console.log);
+zus.sendTransaction(fromAccount, toWalletId, value, note)
 
 ```
 
