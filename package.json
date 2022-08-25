@@ -1,6 +1,6 @@
 {
-  "name": "new-typescript-package-template",
-  "version": "1.0.0",
+  "name": "zus-sdk",
+  "version": "0.0.0",
   "description": "[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)",
   "main": "./lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,10 +9,10 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
+    "prepare": "yarn build",
+    "prepublishOnly": "npm test && yarn lint",
+    "preversion": "yarn lint",
+    "version": "yarn format && git add -A src",
     "postversion": "git push && git push --tags"
   },
   "files": [
@@ -23,18 +23,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ranajahanzaib/typescript-package-template.git"
+    "url": "git+https://github.com/0chain/zus-js-sdk.git"
   },
   "keywords": [
-    "typescript-package-template",
-    "typescript"
+    "zus-js-sdk",
+    "js-client-sdk"
   ],
-  "author": "Rana Jahanzaib (https://ranajahanzaib.com)",
+  "author": "0Chain",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ranajahanzaib/typescript-package-template/issues"
+    "url": "https://github.com/0chain/zus-js-sdk/issues"
   },
-  "homepage": "https://github.com/ranajahanzaib/typescript-package-template#readme",
+  "homepage": "https://github.com/0chain/zus-js-sdk#readme",
   "devDependencies": {
     "@types/jest": "^27.0.3",
     "jest": "^27.4.0",
