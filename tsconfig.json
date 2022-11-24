@@ -12,6 +12,6 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "jest-startup.js"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }
