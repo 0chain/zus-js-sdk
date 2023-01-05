@@ -1,4 +1,5 @@
 const utils = require("./utils");
+const axios = require("axios");
 
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
@@ -8,36 +9,36 @@ const InterestPoolSmartContractAddress =
   "cf8d0df9bd8cc637a4ff4e792ffe3686da6220c45f0e1103baa609f3f1751ef4";
 
 const Endpoints = {
-  REGISTER_CLIENT: "v1/client/put",
-  PUT_TRANSACTION: "v1/transaction/put",
+  REGISTER_CLIENT: "/v1/client/put",
+  PUT_TRANSACTION: "/v1/transaction/put",
 
-  GET_RECENT_FINALIZED: "v1/block/get/recent_finalized",
-  GET_LATEST_FINALIZED: "v1/block/get/latest_finalized",
-  GET_CHAIN_STATS: "v1/chain/get/stats",
-  GET_BLOCK_INFO: "v1/block/get",
-  CHECK_TRANSACTION_STATUS: "v1/transaction/get/confirmation",
-  GET_BALANCE: "v1/client/get/balance",
-  GET_CLIENT: "v1/client/get",
-  GET_SCSTATE: "v1/scstate/get",
+  GET_RECENT_FINALIZED: "/v1/block/get/recent_finalized",
+  GET_LATEST_FINALIZED: "/v1/block/get/latest_finalized",
+  GET_CHAIN_STATS: "/v1/chain/get/stats",
+  GET_BLOCK_INFO: "/v1/block/get",
+  CHECK_TRANSACTION_STATUS: "/v1/transaction/get/confirmation",
+  GET_BALANCE: "/v1/client/get/balance",
+  GET_CLIENT: "/v1/client/get",
+  GET_SCSTATE: "/v1/scstate/get",
 
   // SC REST
-  SC_REST: "v1/screst/",
-  SC_REST_ALLOCATION: "v1/screst/" + StorageSmartContractAddress + "/allocation",
-  SC_REST_ALLOCATIONS: "v1/screst/" + StorageSmartContractAddress + "/allocations",
-  SC_REST_READPOOL_STATS: "v1/screst/" + StorageSmartContractAddress + "/getReadPoolStat",
-  SC_REST_WRITEPOOL_STATS: "v1/screst/" + StorageSmartContractAddress + "/getWritePoolStat",
-  SC_BLOBBER_STATS: "v1/screst/" + StorageSmartContractAddress + "/getblobbers",
-  SC_SHARDER_LIST: "v1/screst/" + MinerSmartContractAddress + "/getSharderList",
-  SC_MINERS_STATS: "v1/screst/" + MinerSmartContractAddress + "/getMinerList",
-  SC_REST_ALLOCATION_MIN_LOCK: "v1/screst/" + StorageSmartContractAddress + "/allocation_min_lock",
+  SC_REST: "/v1/screst/",
+  SC_REST_ALLOCATION: "/v1/screst/" + StorageSmartContractAddress + "/allocation",
+  SC_REST_ALLOCATIONS: "/v1/screst/" + StorageSmartContractAddress + "/allocations",
+  SC_REST_READPOOL_STATS: "/v1/screst/" + StorageSmartContractAddress + "/getReadPoolStat",
+  SC_REST_WRITEPOOL_STATS: "/v1/screst/" + StorageSmartContractAddress + "/getWritePoolStat",
+  SC_BLOBBER_STATS: "/v1/screst/" + StorageSmartContractAddress + "/getblobbers",
+  SC_SHARDER_LIST: "/v1/screst/" + MinerSmartContractAddress + "/getSharderList",
+  SC_MINERS_STATS: "/v1/screst/" + MinerSmartContractAddress + "/getMinerList",
+  SC_REST_ALLOCATION_MIN_LOCK: "/v1/screst/" + StorageSmartContractAddress + "/allocation_min_lock",
 
-  GET_LOCKED_TOKENS: "v1/screst/" + InterestPoolSmartContractAddress + "/getPoolsStats",
-  GET_USER_POOLS: "v1/screst/" + MinerSmartContractAddress + "/getUserPools",
+  GET_LOCKED_TOKENS: "/v1/screst/" + InterestPoolSmartContractAddress + "/getPoolsStats",
+  GET_USER_POOLS: "/v1/screst/" + MinerSmartContractAddress + "/getUserPools",
 
   //STAKING
-  GET_STORAGESC_POOL_STATS: "v1/screst/" + StorageSmartContractAddress + "/getUserStakePoolStat",
-  GET_MINERSC_POOL_STATS: "v1/screst/" + MinerSmartContractAddress + "/getUserPools",
-  GET_STAKE_POOL_STAT: "v1/screst/" + StorageSmartContractAddress + "/getStakePoolStat",
+  GET_STORAGESC_POOL_STATS: "/v1/screst/" + StorageSmartContractAddress + "/getUserStakePoolStat",
+  GET_MINERSC_POOL_STATS: "/v1/screst/" + MinerSmartContractAddress + "/getUserPools",
+  GET_STAKE_POOL_STAT: "/v1/screst/" + StorageSmartContractAddress + "/getStakePoolStat",
 
   //BLOBBER
   ALLOCATION_FILE_LIST: "/v1/file/list/",
@@ -95,4 +96,16 @@ export const getBalance = async (client_id: string) => {
         }
       });
   });
+};
+
+export const getSomething = (clientMessage: string) => {
+
+  // requesting data from server
+  let axiosPromise = axios.get('https://beta.0chain.net/sharder01/v1/client/get/balance', { data: clientMessage });
+
+  // converting server response to upper case
+  axiosPromise = axiosPromise.then((serverData: { data: string; }) => serverData.data.toUpperCase());
+
+  // returning promise so that client code can attach `then` and `catch` handler
+  return(axiosPromise);
 };
