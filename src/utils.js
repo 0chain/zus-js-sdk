@@ -60,7 +60,9 @@ module.exports = {
     var hexStr = "";
 
     for (var i = 0; i < uint8arr.length; i++) {
+      /* tslint:disable:no-bitwise */
       var hex = (uint8arr[i] & 0xff).toString(16);
+      /* tslint:enable:no-bitwise */
       hex = hex.length === 1 ? "0" + hex : hex;
       hexStr += hex;
     }
@@ -79,9 +81,9 @@ module.exports = {
   },
 
   shuffleArray: function shuffleArray(array) {
-    var m = array.length,
-      t,
-      i;
+    var m = array.length;
+    var t;
+    var i;
 
     // While there remain elements to shuffle…
     while (m) {
@@ -113,8 +115,8 @@ module.exports = {
     return sha3.sha3_256(allocationId + ":" + path + ":" + fileName + ":" + partNum);
   },
 
-  parseAuthTicket: function (auth_ticket) {
-    var buff = new Buffer(auth_ticket, "base64");
+  parseAuthTicket: function (authTicket) {
+    var buff = new Buffer(authTicket, "base64");
     var data = buff.toString("ascii");
     return JSON.parse(data);
   },
@@ -190,14 +192,14 @@ module.exports = {
     });
   },
 
-  getShareInfo: function getShareInfo(url, client_signature, clientId, clientkey) {
+  getShareInfo: function getShareInfo(url, clientSignature, clientId, clientkey) {
     return axios({
       method: "get",
       url: url,
       headers: {
         "X-App-Client-ID": clientId,
         "X-App-Client-Key": clientkey,
-        "X-App-Signature": client_signature,
+        "X-App-Signature": clientSignature,
         "X-App-Timestamp": new Date().getTime(),
       },
     });
@@ -213,17 +215,17 @@ module.exports = {
     });
   },
 
-  postMethodTo0box: function (url, data, clientId, public_key, client_signature, id_token) {
+  postMethodTo0box: function (url, data, clientId, publicKey, clientSignature, idToken) {
     const headers = {
-      "X-App-ID-TOKEN": id_token,
+      "X-App-ID-TOKEN": idToken,
       "X-App-Client-ID": clientId,
-      "X-App-Client-Key": public_key,
+      "X-App-Client-Key": publicKey,
       "X-App-Timestamp": new Date().getTime(),
       "X-App-Signature": 1234,
     };
 
     if (client_signature) {
-      headers["X-App-Signature"] = client_signature;
+      headers["X-App-Signature"] = clientSignature;
     }
 
     return axios({
@@ -234,17 +236,17 @@ module.exports = {
     });
   },
 
-  deleteMethodTo0box: function (url, data, clientId, public_key, client_signature, id_token) {
+  deleteMethodTo0box: function (url, data, clientId, publicKey, clientSignature, idToken) {
     const headers = {
-      "X-App-ID-TOKEN": id_token,
+      "X-App-ID-TOKEN": idToken,
       "X-App-Client-ID": clientId,
-      "X-App-Client-Key": public_key,
+      "X-App-Client-Key": publicKey,
       "X-App-Timestamp": new Date().getTime(),
       "X-App-Signature": 1234,
     };
 
     if (client_signature) {
-      headers["X-App-Signature"] = client_signature;
+      headers["X-App-Signature"] = clientSignature;
     }
 
     const result = axios({
@@ -257,10 +259,10 @@ module.exports = {
     return result;
   },
 
-  postReqToBlobber: function postReqToBlobber(url, data, params, clientId, public_key, signature) {
+  postReqToBlobber: function postReqToBlobber(url, data, params, clientId, publicKey, signature) {
     const headers = {
       "X-App-Client-ID": clientId,
-      "X-App-Client-Key": public_key,
+      "X-App-Client-Key": publicKey,
       "Content-Type": "application/x-www-form-urlencoded",
     };
 
@@ -299,7 +301,9 @@ module.exports = {
 
   getReq: function getReq(url, params) {
     const self = this;
+    /* tslint:disable:no-console */
     console.log("axios getReq url", url, "params", params);
+    /* tslint:enable:no-console */
     return axios.get(url, {
       params: params,
       transformResponse: function (data) {
@@ -341,7 +345,7 @@ module.exports = {
     const self = this;
     return new Promise(function (resolve, reject) {
       const urls = sharders.map((sharder) => sharder + url);
-      const promises = urls.map((url) => self.getReq(url, params));
+      const promises = urls.map((oneUrl) => self.getReq(oneUrl, params));
       let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
 
       BlueBirdPromise.some(promises, percentage)
@@ -397,7 +401,7 @@ module.exports = {
     const self = this;
     return new Promise(function (resolve, reject) {
       const urls = miners.map((miner) => miner + url);
-      const promises = urls.map((url) => self.postReq(url, postData));
+      const promises = urls.map((oneUrl) => self.postReq(oneUrl, postData));
       let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
       BlueBirdPromise.some(promises, percentage)
         .then(function (result) {

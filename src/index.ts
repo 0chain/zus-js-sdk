@@ -1,5 +1,5 @@
-const utils = require("./utils");
-const axios = require("axios");
+import utils from "./utils";
+import axios, { AxiosResponse } from "axios";
 
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
@@ -35,12 +35,12 @@ const Endpoints = {
   GET_LOCKED_TOKENS: "/v1/screst/" + InterestPoolSmartContractAddress + "/getPoolsStats",
   GET_USER_POOLS: "/v1/screst/" + MinerSmartContractAddress + "/getUserPools",
 
-  //STAKING
+  // STAKING
   GET_STORAGESC_POOL_STATS: "/v1/screst/" + StorageSmartContractAddress + "/getUserStakePoolStat",
   GET_MINERSC_POOL_STATS: "/v1/screst/" + MinerSmartContractAddress + "/getUserPools",
   GET_STAKE_POOL_STAT: "/v1/screst/" + StorageSmartContractAddress + "/getStakePoolStat",
 
-  //BLOBBER
+  // BLOBBER
   ALLOCATION_FILE_LIST: "/v1/file/list/",
   FILE_STATS_ENDPOINT: "/v1/file/stats/",
   OBJECT_TREE_ENDPOINT: "/v1/file/objecttree/",
@@ -53,7 +53,7 @@ const Endpoints = {
   // OBJECT_TREE_ENDPOINT: '/v1/file/objecttree/',
   COMMIT_META_TXN_ENDPOINT: "/v1/file/commitmetatxn/",
 
-  //PROXY
+  // PROXY
   PROXY_SERVER_DOWNLOAD_ENDPOINT: "/download",
 
   // ZEROBOX URLs
@@ -77,11 +77,11 @@ const config = {
 
 export const Greeter = (name: string) => `Hello ${name}`;
 
-export const getBalance = async (client_id: string) => {
-  return new Promise(function (resolve, reject) {
+export const getBalance = async (clientId: string) => {
+  return new Promise( (resolve, reject) => {
     utils
       .getConsensusedInformationFromSharders(config.sharders, Endpoints.GET_BALANCE, {
-        client_id: client_id,
+        client_id: clientId,
       })
       .then((res: object) => {
         resolve(res);
@@ -96,16 +96,4 @@ export const getBalance = async (client_id: string) => {
         }
       });
   });
-};
-
-export const getSomething = (clientMessage: string) => {
-
-  // requesting data from server
-  let axiosPromise = axios.get('https://beta.0chain.net/sharder01/v1/client/get/balance', { data: clientMessage });
-
-  // converting server response to upper case
-  axiosPromise = axiosPromise.then((serverData: { data: string; }) => serverData.data.toUpperCase());
-
-  // returning promise so that client code can attach `then` and `catch` handler
-  return(axiosPromise);
 };
