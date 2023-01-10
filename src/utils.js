@@ -15,11 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var sha3 = require("js-sha3");
-var JSONbig = require("json-bigint");
-const axios = require("axios");
-var BlueBirdPromise = require("bluebird");
-const moment = require("moment");
+import sha3 from "js-sha3";
+import JSONbig from "json-bigint";
+import axios from "axios";
+import BlueBirdPromise from "bluebird";
+import moment from "moment";
 
 const consensusPercentage = 20;
 
@@ -52,7 +52,7 @@ const parseConsensusMessage = function (finalResponse, parser) {
   return data;
 };
 
-module.exports = {
+export default {
   byteToHexString: function byteToHexString(uint8arr) {
     if (!uint8arr) {
       return "";
