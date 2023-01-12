@@ -52,7 +52,7 @@ const parseConsensusMessage = function (finalResponse, parser) {
   return data;
 };
 
-export default {
+module.exports = {
   byteToHexString: function byteToHexString(uint8arr) {
     if (!uint8arr) {
       return "";
@@ -443,3 +443,5 @@ export default {
     });
   },
 };
+
+

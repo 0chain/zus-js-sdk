@@ -1,5 +1,5 @@
-import * as utils from "./utils.js";
-import * as wasm from "./wasm.js";
+// const utils  = require("./utils.js");
+// import { createWasm } from "./wasm";
 
 let bls;
 let goWasm;
@@ -86,6 +86,7 @@ const configJson = {
 
 export const init = async (configObject, blsWasm) => {
   /* tslint:disable:no-console */
+/*
   let config;
   const hasConfig = typeof configObject !== "undefined"
   if (hasConfig)
@@ -99,9 +100,9 @@ export const init = async (configObject, blsWasm) => {
   bls = blsWasm;
   // await bls.init(bls.BN254)
 
-  console.log('wasm', wasm)
+  //console.log('wasm', wasm)
 
-  goWasm = await wasm.createWasm();
+  goWasm = await createWasm();
 
   console.log('goWasm', goWasm);
 
@@ -113,31 +114,32 @@ export const init = async (configObject, blsWasm) => {
     config.minSubmit,
     config.confirmationChainLength,
   );
+  *
   /* tslint:enable:no-console */
 }
 
-export const Greeter = (name) => `Hello ${name}`;
+export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
 
-export const getBalance = async (clientId) => {
-  return new Promise( (resolve, reject) => {
-    utils
-      .getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
-        client_id: clientId,
-      })
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((error) => {
-        if (error.error === "value not present") {
-          resolve({
-            balance: 0,
-          });
-        } else {
-          reject(error);
-        }
-      });
-  });
-};
+// export const getBalance = async (clientId) => {
+//   return new Promise( (resolve, reject) => {
+//     utils
+//       .getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
+//         client_id: clientId,
+//       })
+//       .then((res) => {
+//         resolve(res);
+//       })
+//       .catch((error) => {
+//         if (error.error === "value not present") {
+//           resolve({
+//             balance: 0,
+//           });
+//         } else {
+//           reject(error);
+//         }
+//       });
+//   });
+// };
 
 export const listAllocations = async () => {
   const allocations = await goWasm.sdk.listAllocations();

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "allowJs": true,
     "checkJs": false,
     "module": "commonjs",
@@ -12,6 +13,7 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/**/*", "jest-startup.js"],
+  // "include": ["src/**/*", "jest-startup.js"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }
