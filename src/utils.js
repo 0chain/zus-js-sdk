@@ -108,24 +108,23 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
   });
 };
 
-export default {
-  byteToHexString: function byteToHexString(uint8arr) {
-    if (!uint8arr) {
-      return "";
-    }
-    var hexStr = "";
+export const byteToHexString = (uint8arr)  => {
+  if (!uint8arr) {
+    return "";
+  }
+  var hexStr = "";
 
-    for (var i = 0; i < uint8arr.length; i++) {
-      /* tslint:disable:no-bitwise */
-      var hex = (uint8arr[i] & 0xff).toString(16);
-      /* tslint:enable:no-bitwise */
-      hex = hex.length === 1 ? "0" + hex : hex;
-      hexStr += hex;
-    }
-    return hexStr;
-  },
+  for (var i = 0; i < uint8arr.length; i++) {
+    /* tslint:disable:no-bitwise */
+    var hex = (uint8arr[i] & 0xff).toString(16);
+    /* tslint:enable:no-bitwise */
+    hex = hex.length === 1 ? "0" + hex : hex;
+    hexStr += hex;
+  }
+  return hexStr;
+}
 
-  hexStringToByte: function hexStringToByte(str) {
+export const hexStringToByte = (str) => {
     if (!str) {
       return new Uint8Array();
     }
@@ -134,9 +133,9 @@ export default {
       a.push(parseInt(str.substr(i, 2), 16));
     }
     return new Uint8Array(a);
-  },
+  }
 
-  shuffleArray: function shuffleArray(array) {
+  export const shuffleArray = (array) => {
     var m = array.length;
     var t;
     var i;
@@ -153,31 +152,31 @@ export default {
     }
 
     return array;
-  },
+  }
 
-  sleep: function sleep(ms) {
+  export const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  },
+  }
 
-  toHex: (str) => {
+  export const toHex = (str) => {
     var result = "";
     for (var i = 0; i < str.length; i++) {
       result += str.charCodeAt(i).toString(16);
     }
     return result;
-  },
+  }
 
-  computeStoragePartDataId: function (allocationId, path, fileName, partNum) {
+  export const computeStoragePartDataId = (allocationId, path, fileName, partNum) => {
     return sha3.sha3_256(allocationId + ":" + path + ":" + fileName + ":" + partNum);
-  },
+  }
 
-  parseAuthTicket: function (authTicket) {
+  export const parseAuthTicket = (authTicket) => {
     var buff = new Buffer(authTicket, "base64");
     var data = buff.toString("ascii");
     return JSON.parse(data);
-  },
+  }
 
-  parseWalletInfo: function (ae) {
+  export const parseWalletInfo = (ae) => {
     return {
       client_id: ae.id,
       client_key: ae.public_key,
@@ -192,7 +191,8 @@ export default {
       version: "1.0",
       date_created: moment.unix(ae.timeStamp).format("YYYY-MM-DD HH:mm:ss"),
     };
-  },
+  }
+
   /*
        A utility function to make a post request.
        url: Complete URL along with path to where the post request is to be sent
@@ -200,7 +200,7 @@ export default {
        Return: Returns a Promise.
    */
 
-  postReq: function postReq(url, data, option) {
+  export const postReq = (url, data, option) => {
     const self = this;
     return axios({
       method: "post",
@@ -215,9 +215,9 @@ export default {
         return self.parseJson(responseData);
       },
     });
-  },
+  }
 
-  putReq: function putReq(url, data) {
+  export const putReq = (url, data) => {
     const self = this;
     return axios({
       method: "put",
@@ -227,17 +227,17 @@ export default {
         return self.parseJson(responseData);
       },
     });
-  },
+  }
 
-  delReq: function delReq(url, data) {
+  export const delReq = (url, data) => {
     return axios({
       method: "delete",
       url: url,
       data: data,
     });
-  },
+  }
 
-  recoverWalletFromCloud: function recoverWalletFromCloud(url, AppIDToken, AppPhoneNumber) {
+  export const recoverWalletFromCloud = (url, AppIDToken, AppPhoneNumber) => {
     return axios({
       method: "get",
       url: url,
@@ -246,9 +246,9 @@ export default {
         "X-App-Phone-Number": AppPhoneNumber,
       },
     });
-  },
+  }
 
-  getShareInfo: function getShareInfo(url, clientSignature, clientId, clientkey) {
+  export const getShareInfo = (url, clientSignature, clientId, clientkey) => {
     return axios({
       method: "get",
       url: url,
@@ -259,9 +259,9 @@ export default {
         "X-App-Timestamp": new Date().getTime(),
       },
     });
-  },
+  }
 
-  getReferrals: function getReferrals(url) {
+  export const getReferrals = (url) => {
     return axios({
       method: "get",
       url: url,
@@ -269,9 +269,9 @@ export default {
         "X-App-Timestamp": new Date().getTime(),
       },
     });
-  },
+  }
 
-  postMethodTo0box: function (url, data, clientId, publicKey, clientSignature, idToken) {
+  export const postMethodTo0box = (url, data, clientId, publicKey, clientSignature, idToken) => {
     const headers = {
       "X-App-ID-TOKEN": idToken,
       "X-App-Client-ID": clientId,
@@ -290,9 +290,9 @@ export default {
       headers: headers,
       data: data,
     });
-  },
+  }
 
-  deleteMethodTo0box: function (url, data, clientId, publicKey, clientSignature, idToken) {
+  export const deleteMethodTo0box = (url, data, clientId, publicKey, clientSignature, idToken) => {
     const headers = {
       "X-App-ID-TOKEN": idToken,
       "X-App-Client-ID": clientId,
@@ -313,9 +313,9 @@ export default {
     });
 
     return result;
-  },
+  }
 
-  postReqToBlobber: function postReqToBlobber(url, data, params, clientId, publicKey, signature) {
+  export const postReqToBlobber = (url, data, params, clientId, publicKey, signature) => {
     const headers = {
       "X-App-Client-ID": clientId,
       "X-App-Client-Key": publicKey,
@@ -340,9 +340,9 @@ export default {
       .catch((error) => {
         return error;
       });
-  },
+  }
 
-  getReqBlobbers: function getReqBlobbers(url, params, clientId) {
+  export const getReqBlobbers = (url, params, clientId) => {
     const self = this;
     return axios.get(url, {
       params: params,
@@ -353,9 +353,9 @@ export default {
         return self.parseJson(data);
       },
     });
-  },
+  }
 
-  getReq: function getReq(url, params) {
+  export const getReq = (url, params) => {
     const self = this;
     /* tslint:disable:no-console */
     console.log("axios getReq url", url, "params", params);
@@ -366,22 +366,22 @@ export default {
         return self.parseJson(data);
       },
     });
-  },
+  }
 
-  getDownloadReq: function getDownloadReq(url, params) {
+  export const getDownloadReq = (url, params) => {
     return axios.get(url, {
       params: params,
     });
-  },
+  }
 
-  plainGet: function plainGet(url) {
+  export const plainGet = (url) => {
     return axios({
       method: "get",
       url: url,
     });
-  },
+  }
 
-  getReqFromMiner: async function getReqFromMiner(url, params) {
+  export const getReqFromMiner = async(url, params) => {
     try {
       return await axios.get(url, {
         params: params,
@@ -391,13 +391,11 @@ export default {
     }
   },
 
-  parseJson: function (jsonString) {
+  export const parseJson = (jsonString) => {
     return JSONbig.parse(jsonString);
-  },
+  }
 
-  getConsensusMessageFromResponse: getConsensusMessageFromResponse,
-
-  doParallelPostReqToAllMiners: function (miners, url, postData) {
+  export const doParallelPostReqToAllMiners = (miners, url, postData) => {
     const self = this;
     return new Promise(function (resolve, reject) {
       const urls = miners.map((miner) => miner + url);
@@ -411,18 +409,18 @@ export default {
           reject({ error: err[0].code });
         });
     });
-  },
+  }
 
-  readBytes: (file) =>
+  export const readBytes = (file) => 
     new Promise((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         resolve(new Uint8Array(reader.result));
       };
       reader.readAsArrayBuffer(file);
-    }),
+    })
 
-  doGetReqToRandomMiner: async function (miners, url, getData) {
+    export const doGetReqToRandomMiner = async (miners, url, getData) => {
     let self = this;
 
     return new Promise(async (resolve, reject) => {
@@ -441,5 +439,4 @@ export default {
         reject(err);
       }
     });
-  },
-};
+  }
