@@ -52,7 +52,63 @@ const parseConsensusMessage = function (finalResponse, parser) {
   return data;
 };
 
-module.exports = {
+export const getConsensusedInformationFromSharders = (sharders, url, params, parser) => {
+  const self = this;
+  return new Promise(function (resolve, reject) {
+    const urls = sharders.map((sharder) => sharder + url);
+    const promises = urls.map((oneUrl) => self.getReq(oneUrl, params));
+    let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
+
+    BlueBirdPromise.some(promises, percentage)
+      .then(function (result) {
+        const hashedResponses = result.map((r) => {
+          return sha3.sha3_256(JSON.stringify(r.data));
+        });
+
+        const consensusResponse = getConsensusMessageFromResponse(
+          hashedResponses,
+          percentage,
+          result,
+        );
+        if (consensusResponse === null) {
+          reject({ error: "Not enough consensus" });
+        } else {
+          resolve(parseConsensusMessage(consensusResponse.data, parser));
+        }
+      })
+      .catch(BlueBirdPromise.AggregateError, function (err) {
+        const errors = err.map((e) => {
+          if (
+            e.response !== undefined &&
+            e.response.status !== undefined &&
+            e.response.status === 400 &&
+            e.response.data !== undefined
+          ) {
+            return sha3.sha3_256(JSON.stringify(e.response.data));
+          } else {
+            return e.code;
+          }
+        });
+        const consensusErrorResponse = getConsensusMessageFromResponse(
+          errors,
+          percentage,
+          err,
+          undefined,
+        );
+        if (consensusErrorResponse === null) {
+          reject({ error: "Not enough consensus" });
+        } else {
+          try {
+            reject(parseConsensusMessage(consensusErrorResponse.response.data));
+          } catch (err) {
+            reject(err);
+          }
+        }
+      });
+  });
+};
+
+export default {
   byteToHexString: function byteToHexString(uint8arr) {
     if (!uint8arr) {
       return "";
@@ -341,62 +397,6 @@ module.exports = {
 
   getConsensusMessageFromResponse: getConsensusMessageFromResponse,
 
-  getConsensusedInformationFromSharders: function (sharders, url, params, parser) {
-    const self = this;
-    return new Promise(function (resolve, reject) {
-      const urls = sharders.map((sharder) => sharder + url);
-      const promises = urls.map((oneUrl) => self.getReq(oneUrl, params));
-      let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
-
-      BlueBirdPromise.some(promises, percentage)
-        .then(function (result) {
-          const hashedResponses = result.map((r) => {
-            return sha3.sha3_256(JSON.stringify(r.data));
-          });
-
-          const consensusResponse = getConsensusMessageFromResponse(
-            hashedResponses,
-            percentage,
-            result,
-          );
-          if (consensusResponse === null) {
-            reject({ error: "Not enough consensus" });
-          } else {
-            resolve(parseConsensusMessage(consensusResponse.data, parser));
-          }
-        })
-        .catch(BlueBirdPromise.AggregateError, function (err) {
-          const errors = err.map((e) => {
-            if (
-              e.response !== undefined &&
-              e.response.status !== undefined &&
-              e.response.status === 400 &&
-              e.response.data !== undefined
-            ) {
-              return sha3.sha3_256(JSON.stringify(e.response.data));
-            } else {
-              return e.code;
-            }
-          });
-          const consensusErrorResponse = getConsensusMessageFromResponse(
-            errors,
-            percentage,
-            err,
-            undefined,
-          );
-          if (consensusErrorResponse === null) {
-            reject({ error: "Not enough consensus" });
-          } else {
-            try {
-              reject(parseConsensusMessage(consensusErrorResponse.response.data));
-            } catch (err) {
-              reject(err);
-            }
-          }
-        });
-    });
-  },
-
   doParallelPostReqToAllMiners: function (miners, url, postData) {
     const self = this;
     return new Promise(function (resolve, reject) {
@@ -443,5 +443,3 @@ module.exports = {
     });
   },
 };
-
-

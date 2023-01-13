@@ -1,5 +1,5 @@
-// const utils  = require("./utils.js");
-// import { createWasm } from "./wasm";
+import { getConsensusedInformationFromSharders } from "./utils";
+import { createWasm } from "./wasm";
 
 let bls;
 let goWasm;
@@ -82,29 +82,24 @@ const configJson = {
   minSubmit: 50,
   confirmationChainLength: 3,
   blockWorker: "https://dev.0chain.net/dns",
+  zboxHost: "https://0box.dev.0chain.net",
+  zboxAppType: "vult",
 };
 
 export const init = async (configObject, blsWasm) => {
   /* tslint:disable:no-console */
-/*
   let config;
-  const hasConfig = typeof configObject !== "undefined"
-  if (hasConfig)
-  {
+  const hasConfig = typeof configObject !== "undefined";
+  if (hasConfig) {
     config = configObject;
-  }
-  else
-  {
+  } else {
     config = configJson;
   }
-  bls = blsWasm;
-  // await bls.init(bls.BN254)
-
-  //console.log('wasm', wasm)
+  console.log("config", config);
 
   goWasm = await createWasm();
 
-  console.log('goWasm', goWasm);
+  console.log("goWasm", goWasm);
 
   await goWasm.sdk.init(
     config.chainId,
@@ -113,35 +108,46 @@ export const init = async (configObject, blsWasm) => {
     config.minConfirmation,
     config.minSubmit,
     config.confirmationChainLength,
+    config.zboxHost,
+    config.zboxAppType,
   );
-  *
+
+  bls = blsWasm || window.bls;
+  console.log("bls", bls);
+  await bls.init(bls.BN254);
+
   /* tslint:enable:no-console */
-}
+};
 
 export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
 
-// export const getBalance = async (clientId) => {
-//   return new Promise( (resolve, reject) => {
-//     utils
-//       .getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
-//         client_id: clientId,
-//       })
-//       .then((res) => {
-//         resolve(res);
-//       })
-//       .catch((error) => {
-//         if (error.error === "value not present") {
-//           resolve({
-//             balance: 0,
-//           });
-//         } else {
-//           reject(error);
-//         }
-//       });
-//   });
-// };
+export const getBalance = async (clientId) => {
+  return new Promise((resolve, reject) => {
+    getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
+      client_id: clientId,
+    })
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((error) => {
+        if (error.error === "value not present") {
+          resolve({
+            balance: 0,
+          });
+        } else {
+          reject(error);
+        }
+      });
+  });
+};
+
+export const setWallet = async (clientID, privateKey, publicKey) => {
+  console.log("START setWallet", { clientID, privateKey, publicKey });
+  await goWasm.setWallet(bls, clientID, privateKey, publicKey);
+  console.log("END setWallet", { clientID, privateKey, publicKey });
+};
 
 export const listAllocations = async () => {
   const allocations = await goWasm.sdk.listAllocations();
   return allocations;
-}
+};
