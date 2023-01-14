@@ -15,11 +15,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import sha3 from "js-sha3";
-import JSONbig from "json-bigint";
-import axios from "axios";
-import BlueBirdPromise from "bluebird";
-import moment from "moment";
+var sha3 = require("js-sha3");
+var JSONbig = require("json-bigint");
+var axios = require("axios");
+// import {Promise as BlueBirdPromise} from "bluebird";
+var BlueBirdPromise  = require("bluebird");
+var moment = require("moment");
 
 const consensusPercentage = 20;
 
@@ -53,23 +54,27 @@ const parseConsensusMessage = function (finalResponse, parser) {
 };
 
 export const getConsensusedInformationFromSharders = (sharders, url, params, parser) => {
-  const self = this;
   return new Promise(function (resolve, reject) {
     const urls = sharders.map((sharder) => sharder + url);
-    const promises = urls.map((oneUrl) => self.getReq(oneUrl, params));
+    const promises = urls.map((oneUrl) => getReq(oneUrl, params));
     let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
+    console.log('BlueBirdPromise', BlueBirdPromise);
+    console.log('promises', promises)
 
     BlueBirdPromise.some(promises, percentage)
       .then(function (result) {
+        console.log('then result', result);
         const hashedResponses = result.map((r) => {
+          console.log('result.map r', r);
           return sha3.sha3_256(JSON.stringify(r.data));
         });
-
+        console.log('hashedResponses', hashedResponses)
         const consensusResponse = getConsensusMessageFromResponse(
           hashedResponses,
           percentage,
           result,
         );
+        console.log('consensusResponse', consensusResponse)
         if (consensusResponse === null) {
           reject({ error: "Not enough consensus" });
         } else {
@@ -77,6 +82,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
         }
       })
       .catch(BlueBirdPromise.AggregateError, function (err) {
+        console.log('err', err)
         const errors = err.map((e) => {
           if (
             e.response !== undefined &&
@@ -95,6 +101,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
           err,
           undefined,
         );
+        console.log('consensusErrorResponse', consensusErrorResponse)
         if (consensusErrorResponse === null) {
           reject({ error: "Not enough consensus" });
         } else {
@@ -201,7 +208,6 @@ export const hexStringToByte = (str) => {
    */
 
   export const postReq = (url, data, option) => {
-    const self = this;
     return axios({
       method: "post",
       url: url,
@@ -212,19 +218,18 @@ export const hexStringToByte = (str) => {
         }
       },
       transformResponse: function (responseData) {
-        return self.parseJson(responseData);
+        return parseJson(responseData);
       },
     });
   }
 
   export const putReq = (url, data) => {
-    const self = this;
     return axios({
       method: "put",
       url: url,
       data: data,
       transformResponse: function (responseData) {
-        return self.parseJson(responseData);
+        return parseJson(responseData);
       },
     });
   }
@@ -343,27 +348,26 @@ export const hexStringToByte = (str) => {
   }
 
   export const getReqBlobbers = (url, params, clientId) => {
-    const self = this;
     return axios.get(url, {
       params: params,
       headers: {
         "X-App-Client-ID": clientId,
       },
       transformResponse: function (data) {
-        return self.parseJson(data);
+        return parseJson(data);
       },
     });
   }
 
   export const getReq = (url, params) => {
-    const self = this;
     /* tslint:disable:no-console */
     console.log("axios getReq url", url, "params", params);
     /* tslint:enable:no-console */
     return axios.get(url, {
       params: params,
       transformResponse: function (data) {
-        return self.parseJson(data);
+        console.log('getReq transformResponse', data)
+        return parseJson(data);
       },
     });
   }
@@ -396,10 +400,9 @@ export const hexStringToByte = (str) => {
   }
 
   export const doParallelPostReqToAllMiners = (miners, url, postData) => {
-    const self = this;
     return new Promise(function (resolve, reject) {
       const urls = miners.map((miner) => miner + url);
-      const promises = urls.map((oneUrl) => self.postReq(oneUrl, postData));
+      const promises = urls.map((oneUrl) => postReq(oneUrl, postData));
       let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
       BlueBirdPromise.some(promises, percentage)
         .then(function (result) {
@@ -421,15 +424,14 @@ export const hexStringToByte = (str) => {
     })
 
     export const doGetReqToRandomMiner = async (miners, url, getData) => {
-    let self = this;
 
     return new Promise(async (resolve, reject) => {
       try {
         let urls = miners.map((miner) => miner + url);
-        let shuffledMinerUrl = self.shuffleArray([...urls]);
+        let shuffledMinerUrl = shuffleArray([...urls]);
 
         for (let i = 0; i < shuffledMinerUrl.length; i++) {
-          const res = await self.getReqFromMiner(shuffledMinerUrl[i], getData);
+          const res = await getReqFromMiner(shuffledMinerUrl[i], getData);
           if (res.status === 200) {
             return resolve(res);
           }
