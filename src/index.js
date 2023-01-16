@@ -141,6 +141,11 @@ export const getBalance = async (clientId) => {
   });
 };
 
+export const getBalanceWasm = async (clientId) => {
+  const balanceObj = await goWasm.sdk.getWalletBalance(clientId);
+  return balanceObj;
+};
+
 export const setWallet = async (clientID, privateKey, publicKey) => {
   console.log("START setWallet", { clientID, privateKey, publicKey });
   await goWasm.setWallet(bls, clientID, privateKey, publicKey);
@@ -150,4 +155,26 @@ export const setWallet = async (clientID, privateKey, publicKey) => {
 export const listAllocations = async () => {
   const allocations = await goWasm.sdk.listAllocations();
   return allocations;
+};
+
+export const createAllocation = async (allocationConfig) => {
+  console.log("allocationConfig", allocationConfig);
+  await goWasm.sdk.createAllocation(
+    allocationConfig.name,
+    allocationConfig.datashards,
+    allocationConfig.parityshards,
+    allocationConfig.size,
+    allocationConfig.expiry,
+    allocationConfig.minReadPrice,
+    allocationConfig.maxReadPrice,
+    allocationConfig.minWritePrice,
+    allocationConfig.maxWritePrice,
+    allocationConfig.lock,
+    [],
+  );
+};
+
+export const bulkUpload = async (objects) => {
+  const results = await goWasm.sdk.bulkUpload(objects);
+  return results;
 };
