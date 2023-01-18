@@ -175,6 +175,11 @@ export const createAllocation = async (allocationConfig) => {
 };
 
 export const bulkUpload = async (objects) => {
+  console.log("bulkUpload objects", objects);
   const results = await goWasm.sdk.bulkUpload(objects);
   return results;
+};
+
+export const getFaucetToken = async () => {
+  await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), 1);
 };
