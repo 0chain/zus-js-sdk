@@ -106,7 +106,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
           reject({ error: "Not enough consensus" });
         } else {
           try {
-            reject(parseConsensusMessage(consensusErrorResponse.response.data));
+            reject(parseConsensusMessage(consensusErrorResponse?.response?.data));
           } catch (err) {
             reject(err);
           }

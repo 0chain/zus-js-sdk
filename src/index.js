@@ -1,8 +1,9 @@
 import { getConsensusedInformationFromSharders } from "./utils";
-import { createWasm } from "./wasm";
+import { createWasm } from "./zcn";
 
 let bls;
 let goWasm;
+let config;
 
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
@@ -88,7 +89,6 @@ const configJson = {
 
 export const init = async (configObject, blsWasm) => {
   /* tslint:disable:no-console */
-  let config;
   const hasConfig = typeof configObject !== "undefined";
   if (hasConfig) {
     config = configObject;
@@ -97,11 +97,13 @@ export const init = async (configObject, blsWasm) => {
   }
   console.log("config", config);
 
-  goWasm = await createWasm();
+  const wasm = await createWasm();
 
-  console.log("goWasm", goWasm);
+  console.log("wasm", wasm);
 
-  await goWasm.sdk.init(
+  await wasm.sdk.showLogs();
+
+  await wasm.sdk.init(
     config.chainId,
     config.blockWorker,
     config.signatureScheme,
@@ -116,6 +118,16 @@ export const init = async (configObject, blsWasm) => {
   console.log("bls", bls);
   await bls.init(bls.BN254);
 
+  // const testWallet = {
+  //   clientId: "5cd1d56a0842db11994ee2221f9f6468d36f9b89ba016880ac2598d214671012",
+  //   privateKey: "6050f9a83bd8c15aa478d99c4dc2dd15a2f415c2b6f3d6e860bc8ab19ac92012",
+  //   publicKey:
+  //     "495cc7e63c3395d6afc632334a6fefcbdaca15e37da4f0416bc0d1b44ff4571a4d2a748307ca55c7439611148cbf18188a4eef3474b752fd64ded7fd02606c9f",
+  // };
+  // await wasm.setWallet(bls, testWallet.clientId, testWallet.privateKey, testWallet.publicKey);
+
+  goWasm = wasm;
+
   /* tslint:enable:no-console */
 };
 
@@ -123,14 +135,14 @@ export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
 
 export const getBalance = async (clientId) => {
   return new Promise((resolve, reject) => {
-    getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
+    getConsensusedInformationFromSharders(config.sharders, Endpoints.GET_BALANCE, {
       client_id: clientId,
     })
       .then((res) => {
         resolve(res);
       })
       .catch((error) => {
-        if (error.error === "value not present") {
+        if (error?.error === "value not present") {
           resolve({
             balance: 0,
           });
@@ -176,10 +188,12 @@ export const createAllocation = async (allocationConfig) => {
 
 export const bulkUpload = async (objects) => {
   console.log("bulkUpload objects", objects);
-  const results = await goWasm.sdk.bulkUpload(objects);
+  const results = await goWasm.bulkUpload(objects);
   return results;
 };
 
 export const getFaucetToken = async () => {
-  await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), 1);
+  console.log("faucet before");
+  await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), 0);
+  console.log("faucet after");
 };
