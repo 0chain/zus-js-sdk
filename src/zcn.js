@@ -225,6 +225,14 @@ async function setWallet(bls, clientID, sk, pk) {
     bridge.jsProxy.bls = bls;
     bridge.jsProxy.secretKey = bls.deserializeHexStrToSecretKey(sk);
     bridge.jsProxy.publicKey = bls.deserializeHexStrToPublicKey(pk);
+    console.log(
+      "inside setWallet- bls:",
+      bls,
+      ",secretKey:",
+      bridge.jsProxy.secretKey,
+      ",publicKey:",
+      bridge.jsProxy.publicKey,
+    );
 
     // use proxy.sdk to detect if sdk is ready
     await bridge.__proxy__.sdk.setWallet(clientID, pk, sk);
