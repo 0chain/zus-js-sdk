@@ -197,3 +197,13 @@ export const getFaucetToken = async () => {
   await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), 0);
   console.log("faucet after");
 };
+
+export const sendToken = async (sendTo, sendAmount) => {
+  console.log("sendToken before", sendTo, sendAmount);
+  const address = sendTo;
+  const methodName = "";
+  const input = JSON.stringify("{note: ''}");
+  const value = sendAmount;
+  await goWasm.sdk.executeSmartContract(address, methodName, input, value);
+  console.log("sendToken after");
+};
