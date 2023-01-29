@@ -118,13 +118,13 @@ export const init = async (configObject, blsWasm) => {
   console.log("bls", bls);
   await bls.init(bls.BN254);
 
-  // const testWallet = {
-  //   clientId: "5cd1d56a0842db11994ee2221f9f6468d36f9b89ba016880ac2598d214671012",
-  //   privateKey: "6050f9a83bd8c15aa478d99c4dc2dd15a2f415c2b6f3d6e860bc8ab19ac92012",
-  //   publicKey:
-  //     "495cc7e63c3395d6afc632334a6fefcbdaca15e37da4f0416bc0d1b44ff4571a4d2a748307ca55c7439611148cbf18188a4eef3474b752fd64ded7fd02606c9f",
-  // };
-  // await wasm.setWallet(bls, testWallet.clientId, testWallet.privateKey, testWallet.publicKey);
+  const testWallet = {
+    clientId: "7d35a6c3ba5066e62989d34cee7dd434d0833d5ea9ff00928aa89994d80e4700",
+    privateKey: "5ababb1e99fe08e44b9843a0a365a832928f9e1aa2d6bba24e01058f1bf0e813",
+    publicKey:
+      "5b7ce801f11b5ce02c2ff980469b00e7ed34a9690977661b0cc80bc5eb33ee13baaf6b099f38a2586c5ff63c576870829c117e392fc40868e4bd6418dbaf389c",
+  };
+  await wasm.setWallet(bls, testWallet.clientId, testWallet.privateKey, testWallet.publicKey);
 
   goWasm = wasm;
 

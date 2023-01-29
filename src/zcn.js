@@ -31,6 +31,7 @@ function hexStringToByte(str) {
 }
 
 function blsSign(hash) {
+  console.log("blsSign");
   const { jsProxy } = g.__zcn_wasm__;
 
   if (!jsProxy || !jsProxy.secretKey) {
@@ -184,6 +185,7 @@ async function bulkUpload(options) {
 }
 
 async function blsSign(hash) {
+  console.log("async blsSign");
   if (!bridge.jsProxy && !bridge.jsProxy.secretKey) {
     const errMsg = "err: bls.secretKey is not initialized";
     console.warn(errMsg);
