@@ -185,7 +185,7 @@ async function bulkUpload(options) {
 }
 
 async function blsSign(hash) {
-  console.log("async blsSign");
+  console.log("async blsSign", hash);
   if (!bridge.jsProxy && !bridge.jsProxy.secretKey) {
     const errMsg = "err: bls.secretKey is not initialized";
     console.warn(errMsg);
@@ -194,7 +194,9 @@ async function blsSign(hash) {
 
   const bytes = hexStringToByte(hash);
 
+  console.log("bridge.jsProxy.secretKey", bridge.jsProxy.secretKey);
   const sig = bridge.jsProxy.secretKey.sign(bytes);
+  console.log("sig", sig);
 
   if (!sig) {
     const errMsg = "err: wasm blsSign function failed to sign transaction";
@@ -202,6 +204,7 @@ async function blsSign(hash) {
     throw new Error(errMsg);
   }
 
+  console.log("sig.serializeToHexStr()", sig.serializeToHexStr());
   return sig.serializeToHexStr();
 }
 

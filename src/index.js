@@ -87,15 +87,26 @@ const configJson = {
   zboxAppType: "vult",
 };
 
+const alternateConfig = [
+  configJson.chainId,
+  configJson.blockWorker,
+  configJson.signatureScheme,
+  configJson.minConfirmation,
+  configJson.minSubmit,
+  configJson.confirmationChainLength,
+  "https://0box.dev.0chain.net", //zboxHost
+  "vult", //zboxAppType
+];
+
 export const init = async (configObject, blsWasm) => {
   /* tslint:disable:no-console */
-  const hasConfig = typeof configObject !== "undefined";
-  if (hasConfig) {
-    config = configObject;
-  } else {
-    config = configJson;
-  }
-  console.log("config", config);
+  // const hasConfig = typeof configObject !== "undefined";
+  // if (hasConfig) {
+  //   config = configObject;
+  // } else {
+  config = configJson;
+  //}
+  //console.log("config", config);
 
   const wasm = await createWasm();
 
@@ -103,18 +114,22 @@ export const init = async (configObject, blsWasm) => {
 
   await wasm.sdk.showLogs();
 
-  await wasm.sdk.init(
-    config.chainId,
-    config.blockWorker,
-    config.signatureScheme,
-    config.minConfirmation,
-    config.minSubmit,
-    config.confirmationChainLength,
-    config.zboxHost,
-    config.zboxAppType,
-  );
+  console.log(...alternateConfig);
+  await wasm.sdk.init(...alternateConfig);
+  // await wasm.sdk.init(
+  //   config.chainId,
+  //   config.blockWorker,
+  //   config.signatureScheme,
+  //   config.minConfirmation,
+  //   config.minSubmit,
+  //   config.confirmationChainLength,
+  //   config.zboxHost,
+  //   config.zboxAppType,
+  // );
 
-  bls = blsWasm || window.bls;
+  console.log("blsWasm", blsWasm);
+  console.log("window.bls", window.bls);
+  bls = window.bls;
   console.log("bls", bls);
   await bls.init(bls.BN254);
 
