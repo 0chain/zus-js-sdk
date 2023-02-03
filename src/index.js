@@ -98,6 +98,10 @@ const alternateConfig = [
   "vult", //zboxAppType
 ];
 
+const getWasm = () => {
+  return window.goWasm;
+};
+
 export const init = async (configObject, blsWasm) => {
   /* tslint:disable:no-console */
   // const hasConfig = typeof configObject !== "undefined";
@@ -108,7 +112,8 @@ export const init = async (configObject, blsWasm) => {
   //}
   //console.log("config", config);
 
-  const wasm = await createWasm();
+  // const wasm = await createWasm();
+  const wasm = getWasm();
 
   console.log("wasm", wasm);
 

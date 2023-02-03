@@ -348,3 +348,8 @@ export async function createWasm() {
 
   return proxy;
 }
+
+//load and create wasm
+createWasm().then((a) => {
+  g.goWasm = a;
+});
