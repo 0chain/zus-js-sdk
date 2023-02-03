@@ -70,6 +70,15 @@ const Endpoints = {
   ZEROBOX_SERVER_DELETE_EXIST_ALLOCATION: "/v2/deleteallocation",
 };
 
+const configJson = {
+  miners: [
+    "https://dev.0chain.net/miner02",
+    "https://dev.0chain.net/miner01",
+    "https://dev.0chain.net/miner03",
+  ],
+  sharders: ["https://dev.0chain.net/sharder01", "https://dev.0chain.net/sharder02"],
+};
+
 export const init = async (config) => {
   /* tslint:disable:no-console */
   console.log("config", config);
@@ -96,7 +105,7 @@ export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
 
 export const getBalance = async (clientId) => {
   return new Promise((resolve, reject) => {
-    getConsensusedInformationFromSharders(config.sharders, Endpoints.GET_BALANCE, {
+    getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
       client_id: clientId,
     })
       .then((res) => {
