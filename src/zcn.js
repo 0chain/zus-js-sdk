@@ -350,6 +350,6 @@ export async function createWasm() {
 }
 
 //load and create wasm
-createWasm().then((a) => {
-  g.goWasm = a;
-});
+// createWasm().then((a) => {
+//   g.goWasm = a;
+// });
