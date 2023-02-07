@@ -3,7 +3,6 @@ import { createWasm } from "./zcn";
 
 let bls;
 let goWasm;
-let config;
 
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
@@ -176,4 +175,10 @@ export const sendToken = async (sendTo, sendAmount) => {
   const value = sendAmount;
   await goWasm.sdk.executeSmartContract(address, methodName, input, value);
   console.log("sendToken after");
+};
+
+export const listObjects = async (allocationId, path) => {
+  console.log("listObjects", allocationId, path);
+  const { list = [] } = await goWasm.sdk.listObjects(allocationId, path);
+  return list;
 };
