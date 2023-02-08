@@ -1,18 +1,18 @@
-import { getBalance, getSomething } from "../index";
-import mockAxios from "jest-mock-axios";
+// import { getBalance, getSomething } from "../index";
+// import mockAxios from "jest-mock-axios";
 
-afterEach(() => {
-  // cleaning up the mess left behind the previous test
-  mockAxios.reset();
-});
+// afterEach(() => {
+//   // cleaning up the mess left behind the previous test
+//   mockAxios.reset();
+// });
 
-test("getBalance", async () => {
-  let catchFn = jest.fn(),
-    thenFn = jest.fn();
+// test("getBalance", async () => {
+//   let catchFn = jest.fn(),
+//     thenFn = jest.fn();
 
-  getBalance("3684fdc729db856292a7ae7936a6fb4ca8b6a131b48df66e6dd7e9edf04be355")
-    .then(thenFn)
-    .catch(catchFn);
+//   getBalance("3684fdc729db856292a7ae7936a6fb4ca8b6a131b48df66e6dd7e9edf04be355")
+//     .then(thenFn)
+//     .catch(catchFn);
 
   // mockAxios.get.mockResolvedValueOnce({balance: 1});
 

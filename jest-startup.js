@@ -1,2 +1,2 @@
-import { URLSearchParams } from "url";
-global.URLSearchParams = URLSearchParams;
+// import { URLSearchParams } from "url";
+// global.URLSearchParams = URLSearchParams;
