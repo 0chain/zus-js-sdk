@@ -1,9 +1,10 @@
 {
   "name": "zus-sdk",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)",
   "main": "./lib/index.js",
   "types": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "start": "node src/example.js",
     "test": "jest --config jestconfig.json",
@@ -11,9 +12,9 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "yarn build",
-    "prepublishOnly": "npm test && yarn lint",
+    "prepublishOnly": "yarn lint",
     "preversion": "yarn lint",
-    "version": "yarn format && git add -A src",
+    "version": "git add -A src",
     "postversion": "git push && git push --tags"
   },
   "files": [

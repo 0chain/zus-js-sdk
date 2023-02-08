@@ -394,9 +394,9 @@ export const hexStringToByte = (str) => {
     }
   },
 
-  export const parseJson = (jsonString) => {
-    return JSONbig.parse(jsonString);
-  }
+  // export const parseJson = (jsonString) => {
+  //   return JSONbig.parse(jsonString);
+  // }
 
   export const doParallelPostReqToAllMiners = (miners, url, postData) => {
     return new Promise(function (resolve, reject) {
