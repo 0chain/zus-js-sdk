@@ -4,6 +4,7 @@ import { createWasm } from "./zcn";
 let bls;
 let goWasm;
 
+/* tslint:disable:no-console */
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
 const MinerSmartContractAddress =
@@ -79,7 +80,6 @@ const configJson = {
 };
 
 export const init = async (config) => {
-  /* tslint:disable:no-console */
   console.log("config", config);
 
   const wasm = await createWasm();
@@ -96,8 +96,6 @@ export const init = async (config) => {
   await bls.init(bls.BN254);
 
   goWasm = wasm;
-
-  /* tslint:enable:no-console */
 };
 
 export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;

@@ -15,6 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+  /* tslint:disable:no-console */
 var sha3 = require("js-sha3");
 var JSONbig = require("json-bigint");
 var axios = require("axios");
@@ -360,9 +361,7 @@ export const hexStringToByte = (str) => {
   }
 
   export const getReq = (url, params) => {
-    /* tslint:disable:no-console */
     console.log("axios getReq url", url, "params", params);
-    /* tslint:enable:no-console */
     return axios.get(url, {
       params: params,
       transformResponse: function (data) {

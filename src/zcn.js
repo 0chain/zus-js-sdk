@@ -17,6 +17,7 @@
 
 "use strict";
 
+/* tslint:disable:no-console */
 const g = global || window || self;
 
 function hexStringToByte(str) {
@@ -225,7 +226,7 @@ async function setWallet(bls, clientID, sk, pk) {
   if (!sk) throw new Error("secret key is undefined, on wasm setWallet fn");
   if (!pk) throw new Error("public key is undefined, on wasm setWallet fn");
 
-  if (bridge.walletId != clientID) {
+  if (bridge.walletId !== clientID) {
     console.log("setWallet: ", clientID, sk, pk);
     bridge.jsProxy.bls = bls;
     bridge.jsProxy.secretKey = bls.deserializeHexStrToSecretKey(sk);
