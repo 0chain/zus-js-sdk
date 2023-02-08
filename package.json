@@ -1,6 +1,6 @@
 {
   "name": "zus-sdk",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)",
   "main": "./lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn lint",
+    "prepublishOnly": "yarn test && yarn lint",
     "preversion": "yarn lint",
     "version": "git add -A src",
     "postversion": "git push && git push --tags"
