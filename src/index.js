@@ -153,10 +153,36 @@ export const createAllocation = async (allocationConfig) => {
   );
 };
 
+export const getAllocation = async (allocationId) => {
+  const allocation = await goWasm.sdk.getAllocation(allocationId);
+  return allocation;
+};
+
 export const bulkUpload = async (objects) => {
   console.log("bulkUpload objects", objects);
   const results = await goWasm.bulkUpload(objects);
   return results;
+};
+
+//allocationID, remotePath, authTicket, lookupHash string, downloadThumbnailOnly bool, numBlocks int
+export const download = async (
+  allocationID,
+  remotePath,
+  authTicket,
+  lookupHash,
+  downloadThumbnailOnly,
+  numBlocks,
+) => {
+  console.log("download allocationID", allocationID, "remotePath", remotePath);
+  const file = await goWasm.sdk.download(
+    allocationID,
+    remotePath,
+    authTicket,
+    lookupHash,
+    downloadThumbnailOnly,
+    numBlocks,
+  );
+  return file;
 };
 
 export const getFaucetToken = async () => {
