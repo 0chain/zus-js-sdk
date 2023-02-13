@@ -90,11 +90,11 @@ const Endpoints = {
 
 const configJson = {
   miners: [
-    "https://dev.0chain.net/miner02",
-    "https://dev.0chain.net/miner01",
-    "https://dev.0chain.net/miner03",
+    "https://dev2.zus.network/miner01",
+    "https://dev3.zus.network/miner01",
+    "https://dev1.zus.network/miner01",
   ],
-  sharders: ["https://dev.0chain.net/sharder01", "https://dev.0chain.net/sharder02"],
+  sharders: ["https://dev1.zus.network/sharder01", "https://dev2.zus.network/sharder01", "https://dev3.zus.network/sharder01"],
 };
 
 
