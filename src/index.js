@@ -126,3 +126,29 @@ export const listObjects = async (allocationId, path) => {
   const { list = [] } = await goWasm.sdk.listObjects(allocationId, path);
   return list;
 };
+
+//allocationId, filePath, clientId, encryptionPublicKey string, expireAt int, revoke bool,availableAfter string
+export const share = async (
+  allocationId,
+  filePath,
+  clientId,
+  encryptionPublicKey,
+  expireAt,
+  revoke,
+  availableAfter,
+) => {
+  console.log("share allocationId", allocationId, "filePath", filePath);
+
+  const authTicket = await goWasm.sdk.share(
+    allocationId,
+    filePath,
+    clientId,
+    encryptionPublicKey,
+    expireAt,
+    revoke,
+    availableAfter,
+  );
+
+  console.log("authTicket after share", authTicket);
+  return authTicket;
+};
