@@ -544,7 +544,7 @@ export const hexStringToByte = (str) => {
     txn.hash = data.hash;
     txn.version = data.version;
     txn.client_id = data.client_id;
-    txn.to_client_id = (typeof data.to_client_id != 'undefined') ? data.to_client_id : null;
+    txn.to_client_id = (typeof data.to_client_id !== 'undefined') ? data.to_client_id : null;
     txn.chain_id = data.chain_id;
     txn.transaction_data = data.transaction_data;
     txn.transaction_value = data.transaction_value;
@@ -552,10 +552,10 @@ export const hexStringToByte = (str) => {
     txn.creation_date = data.creation_date;
     txn.transaction_type = data.transaction_type;
     txn.transaction_output = data.transaction_output;
-    txn.txn_output_hash = (typeof data.txn_output_hash != 'undefined') ? data.txn_output_hash : null;
+    txn.txn_output_hash = (typeof data.txn_output_hash !== 'undefined') ? data.txn_output_hash : null;
   }
 
-  export const submitTransaction = async (ae, toClientId, val, note, transaction_type) => {
+  export const submitTransaction = async (ae, toClientId, val, note, transactionType) => {
     const hashPayload = sha3.sha3_256(note);
     const ts = Math.floor(new Date().getTime() / 1000);
 
@@ -582,8 +582,8 @@ export const hexStringToByte = (str) => {
     data.client_id = ae.id;
     data.transaction_value = val;
     data.transaction_data = note;
-    data.transaction_type = transaction_type;
-    data.transaction_nonce = nonceToUse
+    data.transaction_type = transactionType;
+    data.transaction_nonce = nonceToUse;
     data.creation_date = ts;
     data.to_client_id = toClientId;
     data.hash = hash;
