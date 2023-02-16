@@ -152,3 +152,13 @@ export const share = async (
   console.log("authTicket after share", authTicket);
   return authTicket;
 };
+
+export const showLogs = async () => {
+  console.log("showLogs");
+  await goWasm.sdk.showLogs();
+};
+
+export const hideLogs = async () => {
+  console.log("hideLogs");
+  await goWasm.sdk.hideLogs();
+};
