@@ -162,3 +162,33 @@ export const hideLogs = async () => {
   console.log("hideLogs");
   await goWasm.sdk.hideLogs();
 };
+
+export const deleteObject = async (allocationId, path) => {
+  console.log("deleteObject");
+  await goWasm.sdk.delete(allocationId, path);
+};
+
+export const renameObject = async (allocationId, path, newName) => {
+  console.log("renameObject");
+  await goWasm.sdk.rename(allocationId, path, newName);
+};
+
+export const copyObject = async (allocationId, path, destination) => {
+  console.log("copyObject");
+  await goWasm.sdk.copy(allocationId, path, destination);
+};
+
+export const moveObject = async (allocationId, path, destination) => {
+  console.log("moveObject");
+  await goWasm.sdk.move(allocationId, path, destination);
+};
+
+export const play = async (allocationId, remotePath, authTicket, lookupHash, isLive) => {
+  console.log("play");
+  await goWasm.sdk.play(allocationId, remotePath, authTicket, lookupHash, isLive);
+};
+
+export const stop = async () => {
+  console.log("stop");
+  await goWasm.sdk.stop();
+};
