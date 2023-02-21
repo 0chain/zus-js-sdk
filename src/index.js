@@ -82,6 +82,56 @@ export const getAllocation = async (allocationId) => {
   return allocation;
 };
 
+export const reloadAllocation = async (allocationId) => {
+  console.log("reloadAllocation");
+  const allocation = await goWasm.sdk.reloadAllocation(allocationId);
+  return allocation;
+};
+
+export const transferAllocation = async (allocationId, newOwnerId, newOwnerPublicKey) => {
+  console.log("transferAllocation");
+  await goWasm.sdk.transferAllocation(allocationId, newOwnerId, newOwnerPublicKey);
+};
+
+export const freezeAllocation = async (allocationId) => {
+  console.log("freezeAllocation");
+  const hash = await goWasm.sdk.freezeAllocation(allocationId);
+  return hash;
+};
+
+export const cancelAllocation = async (allocationId) => {
+  console.log("cancelAllocation");
+  const hash = await goWasm.sdk.cancelAllocation(allocationId);
+  return hash;
+};
+
+//allocationId string, name string,size, expiry int64,lock int64,setImmutable, updateTerms bool,addBlobberId, removeBlobberId string
+export const updateAllocation = async (
+  allocationId,
+  name,
+  size,
+  expiry,
+  lock,
+  setImmutable,
+  updateTerms,
+  addBlobberId,
+  removeBlobberId,
+) => {
+  console.log("updateAllocation");
+  const hash = await goWasm.sdk.updateAllocation(
+    allocationId,
+    name,
+    size,
+    expiry,
+    lock,
+    setImmutable,
+    updateTerms,
+    addBlobberId,
+    removeBlobberId,
+  );
+  return hash;
+};
+
 export const bulkUpload = async (objects) => {
   console.log("bulkUpload objects", objects);
   const results = await goWasm.bulkUpload(objects);
