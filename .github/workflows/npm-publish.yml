@@ -4,6 +4,8 @@
 name: Node.js Package
 
 on:
+  workflow_dispatch:
+  
   release:
     types: [created]
 
@@ -11,23 +13,48 @@ jobs:
   build:
     runs-on: arc-runner
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Action checkout.
+        uses: actions/checkout@v3
+      
+      - name: Setting up Node.
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+
+      - name: Installing yarn.
+        run: |
+          npm install --global yarn
+
+      - name: Installing dependencies.
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Running Tests.
+        run: |
+          yarn test
 
   publish-npm:
     needs: build
     runs-on: arc-runner
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Action checkout.
+        uses: actions/checkout@v3
+
+      - name: Setting up Node.
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: yarn install --frozen-lockfile
-      - run: npm publish
+
+      - name: Installing yarn.
+        run: |
+          npm install --global yarn
+          
+      - name: Installing dependencies.
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Creating build.
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
