@@ -138,7 +138,7 @@ export const bulkUpload = async (objects) => {
   return results;
 };
 
-//allocationID, remotePath, authTicket, lookupHash string, downloadThumbnailOnly bool, numBlocks int
+//allocationID, remotePath, authTicket, lookupHash string, downloadThumbnailOnly bool, numBlocks int, callbackFuncName string
 export const download = async (
   allocationID,
   remotePath,
@@ -146,6 +146,7 @@ export const download = async (
   lookupHash,
   downloadThumbnailOnly,
   numBlocks,
+  callbackFuncName,
 ) => {
   console.log("download allocationID", allocationID, "remotePath", remotePath);
   const file = await goWasm.sdk.download(
@@ -155,6 +156,7 @@ export const download = async (
     lookupHash,
     downloadThumbnailOnly,
     numBlocks,
+    callbackFuncName,
   );
   return file;
 };
