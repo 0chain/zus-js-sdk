@@ -242,3 +242,10 @@ export const stop = async () => {
   console.log("stop");
   await goWasm.sdk.stop();
 };
+
+export const getNextSegment = async () => {
+  console.log("getNextSegment");
+  const buf = await goWasm.sdk.getNextSegment();
+  console.log("buf", buf);
+  return buf;
+};
