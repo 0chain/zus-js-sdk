@@ -251,3 +251,40 @@ export const getNextSegment = async () => {
   console.log("buf", buf);
   return buf;
 };
+
+export const createDir = async (allocationId, path) => {
+  console.log("createDir", path);
+  await goWasm.sdk.createDir(allocationId, path);
+};
+
+export const getFileStats = async (allocationId, path) => {
+  console.log("getFileStats", path);
+  const fileStats = await goWasm.sdk.getFileStats(allocationId, path);
+  console.log("fileStats", fileStats);
+  return fileStats;
+};
+
+//allocationID, remotePath, authTicket, lookupHash string, numBlocks int, startBlockNumber, endBlockNumber int64, callbackFuncName string
+export const downloadBlocks = async (
+  allocationID,
+  remotePath,
+  authTicket,
+  lookupHash,
+  numBlocks,
+  startBlockNumber,
+  endBlockNumber,
+  callbackFuncName,
+) => {
+  console.log("downloadBlocks allocationID", allocationID, "remotePath", remotePath);
+  const output = await goWasm.sdk.downloadBlocks(
+    allocationID,
+    remotePath,
+    authTicket,
+    lookupHash,
+    numBlocks,
+    startBlockNumber,
+    endBlockNumber,
+    callbackFuncName,
+  );
+  return output;
+};
