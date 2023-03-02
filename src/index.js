@@ -288,3 +288,27 @@ export const downloadBlocks = async (
   );
   return output;
 };
+
+export const getUSDRate = async (symbol) => {
+  console.log("getUSDRate", symbol);
+  const usdRate = await goWasm.sdk.getUSDRate(symbol);
+  return usdRate;
+};
+
+export const isWalletID = async (clientID) => {
+  console.log("isWalletID", clientID);
+  const result = await goWasm.sdk.isWalletID(clientID);
+  return result;
+};
+
+export const getPublicEncryptionKey = async (mnemonic) => {
+  console.log("getPublicEncryptionKey", mnemonic);
+  const publicKey = await goWasm.sdk.getPublicEncryptionKey(mnemonic);
+  return publicKey;
+};
+
+export const getLookupHash = async (allocationId, path) => {
+  console.log("getLookupHash", allocationId, path);
+  const hash = await goWasm.sdk.getLookupHash(allocationId, path);
+  return hash;
+};
