@@ -77,6 +77,24 @@ export const createAllocation = async (allocationConfig) => {
   );
 };
 
+export const createAllocationWithBlobbers = async (allocationConfig) => {
+  console.log("createAllocationWithBlobbers allocationConfig", allocationConfig);
+  const txn = await goWasm.sdk.createAllocation(
+    allocationConfig.name,
+    allocationConfig.datashards,
+    allocationConfig.parityshards,
+    allocationConfig.size,
+    allocationConfig.expiry,
+    allocationConfig.minReadPrice,
+    allocationConfig.maxReadPrice,
+    allocationConfig.minWritePrice,
+    allocationConfig.maxWritePrice,
+    allocationConfig.lock,
+    allocationConfig.blobbers,
+  );
+  return txn;
+};
+
 export const getAllocation = async (allocationId) => {
   const allocation = await goWasm.sdk.getAllocation(allocationId);
   return allocation;
@@ -311,4 +329,44 @@ export const getLookupHash = async (allocationId, path) => {
   console.log("getLookupHash", allocationId, path);
   const hash = await goWasm.sdk.getLookupHash(allocationId, path);
   return hash;
+};
+
+//referredBlobberURLs []string, dataShards, parityShards int, size, expiry int64, minReadPrice, maxReadPrice, minWritePrice, maxWritePrice int64
+export const getAllocationBlobbers = async (
+  referredBlobberURLs,
+  dataShards,
+  parityShards,
+  size,
+  expiry,
+  minReadPrice,
+  maxReadPrice,
+  minWritePrice,
+  maxWritePrice,
+) => {
+  console.log("getAllocationBlobbers", referredBlobberURLs);
+  const blobberList = await goWasm.sdk.getAllocationBlobbers(
+    referredBlobberURLs,
+    dataShards,
+    parityShards,
+    size,
+    expiry,
+    minReadPrice,
+    maxReadPrice,
+    minWritePrice,
+    maxWritePrice,
+  );
+  return blobberList;
+};
+
+//blobberUrls []string
+export const getBlobberIds = async (blobberUrls) => {
+  console.log("getBlobberIds", blobberUrls);
+  const blobberIds = await goWasm.sdk.getBlobberIds(blobberUrls);
+  return blobberIds;
+};
+
+export const createReadPool = async () => {
+  console.log("createReadPool");
+  const result = await goWasm.sdk.createReadPool();
+  return result;
 };
