@@ -63,7 +63,6 @@ export const listAllocations = async () => {
 export const createAllocation = async (allocationConfig) => {
   console.log("allocationConfig", allocationConfig);
   await goWasm.sdk.createAllocation(
-    allocationConfig.name,
     allocationConfig.datashards,
     allocationConfig.parityshards,
     allocationConfig.size,
@@ -80,7 +79,6 @@ export const createAllocation = async (allocationConfig) => {
 export const createAllocationWithBlobbers = async (allocationConfig) => {
   console.log("createAllocationWithBlobbers allocationConfig", allocationConfig);
   const txn = await goWasm.sdk.createAllocation(
-    allocationConfig.name,
     allocationConfig.datashards,
     allocationConfig.parityshards,
     allocationConfig.size,
