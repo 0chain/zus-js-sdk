@@ -368,3 +368,13 @@ export const createReadPool = async () => {
   const result = await goWasm.sdk.createReadPool();
   return result;
 };
+
+export const createWallet = async () => {
+  const wallet = await goWasm.sdk.createWallet();
+  return wallet;
+};
+
+export const recoverWallet = async (mnemonic) => {
+  const wallet = await goWasm.sdk.recoverWallet(mnemonic);
+  return wallet;
+};
