@@ -1,8 +1,12 @@
 import { getBalanceUtil, submitTransaction } from "./utils";
 import { createWasm } from "./zcn";
+import * as bip39 from "bip39";
+import { sha3_256 } from "js-sha3";
+import { Buffer as buff } from "buffer";
 
 let bls;
 let goWasm;
+let Buffer;
 
 /* tslint:disable:no-console */
 
@@ -31,6 +35,8 @@ export const init = async (config) => {
   await bls.init(bls.BN254);
 
   goWasm = wasm;
+  window.Buffer = buff;
+  Buffer = buff;
 };
 
 export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
@@ -369,12 +375,84 @@ export const createReadPool = async () => {
   return result;
 };
 
+const truncateAddress = (addressString = "", start = 5, flag = true, end = -4) => {
+  if (flag) {
+    return `${addressString?.slice(0, start)}...${addressString?.slice(end)}`;
+  } else {
+    return `${addressString?.slice(0, start)}...`;
+  }
+};
+
+const hexStringToByte = (str) => {
+  if (!str) return new Uint8Array();
+
+  const a = [];
+  for (let i = 0, len = str.length; i < len; i += 2) {
+    a.push(parseInt(str.substr(i, 2), 16));
+  }
+
+  return new Uint8Array(a);
+};
+
+const createWalletKeys = async (userMnemonic) => {
+  let mnemonic = userMnemonic;
+  if (!userMnemonic) mnemonic = bip39.generateMnemonic(256);
+  console.log("mnemonic", mnemonic);
+
+  const seed = await bip39.mnemonicToSeed(mnemonic, "0chain-client-split-key");
+  const buffer = new Uint8Array(seed);
+
+  const blsSecret = new bls.SecretKey();
+  bls.setRandFunc(buffer);
+  blsSecret.setLittleEndian(buffer);
+
+  const publicKey = blsSecret.getPublicKey().serializeToHexStr();
+  const hexPublicKey = hexStringToByte(publicKey);
+  const publicKeySha = sha3_256(hexPublicKey);
+
+  const keys = {
+    walletId: publicKeySha,
+    privateKey: blsSecret.serializeToHexStr(),
+    publicKey,
+  };
+
+  return { keys, mnemonic };
+};
+
 export const createWallet = async () => {
-  const wallet = await goWasm.sdk.createWallet();
+  console.log("before createWalletKeys");
+  const { keys, mnemonic } = await createWalletKeys();
+  console.log("after createWalletKeys");
+  const { publicKey, walletId } = keys;
+  console.log("createWallet", keys, mnemonic);
+  const pubEncKey = await goWasm.sdk.getPublicEncryptionKey(mnemonic);
+  console.log("pubEncKey", pubEncKey);
+  const wallet = {
+    id: walletId,
+    name: truncateAddress(publicKey),
+    mnemonic,
+    version: "1.0",
+    creationDate: Date.now(),
+    keys: { ...keys, publicEncryptionKey: pubEncKey },
+  };
   return wallet;
 };
 
 export const recoverWallet = async (mnemonic) => {
-  const wallet = await goWasm.sdk.recoverWallet(mnemonic);
+  console.log("before createWalletKeys");
+  const { keys } = await createWalletKeys(mnemonic);
+
+  const clientId = keys.walletId;
+  const pubEncKey = await goWasm.sdk.getPublicEncryptionKey(mnemonic);
+
+  const wallet = {
+    id: clientId,
+    version: "1.0",
+    creationDate: Date.now(),
+    keys: {
+      ...keys,
+      publicEncryptionKey: pubEncKey,
+    },
+  };
   return wallet;
 };
