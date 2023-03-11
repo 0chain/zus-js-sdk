@@ -104,6 +104,12 @@ export const getAllocation = async (allocationId) => {
   return allocation;
 };
 
+export const getAllocationFromAuthTicket = async (authTicket) => {
+  console.log("getAllocationFromAuthTicket", authTicket);
+  const allocation = await goWasm.sdk.getAllocationWith(authTicket);
+  return allocation;
+};
+
 export const reloadAllocation = async (allocationId) => {
   console.log("reloadAllocation");
   const allocation = await goWasm.sdk.reloadAllocation(allocationId);
@@ -369,10 +375,29 @@ export const getBlobberIds = async (blobberUrls) => {
   return blobberIds;
 };
 
+export const getBlobbers = async () => {
+  console.log("getBlobbers");
+  const blobberList = await goWasm.sdk.getBlobbers();
+  return blobberList;
+};
+
 export const createReadPool = async () => {
   console.log("createReadPool");
   const result = await goWasm.sdk.createReadPool();
   return result;
+};
+
+export const getReadPoolInfo = async (clientID) => {
+  console.log("getReadPoolInfo", clientID);
+  const readPool = await goWasm.sdk.getReadPoolInfo(clientID);
+  return readPool;
+};
+
+//allocationId string, tokens string, fee string
+export const lockWritePool = async (allocationId, tokens, fee) => {
+  console.log("lockWritePool", allocationId, tokens, fee);
+  const hash = await goWasm.sdk.lockWritePool(allocationId, tokens, fee);
+  return hash;
 };
 
 const truncateAddress = (addressString = "", start = 5, flag = true, end = -4) => {
@@ -455,4 +480,10 @@ export const recoverWallet = async (mnemonic) => {
     },
   };
   return wallet;
+};
+
+export const decodeAuthTicket = async (authTicket) => {
+  console.log("decodeAuthTicket", authTicket);
+  const output = await goWasm.sdk.decodeAuthTicket(authTicket);
+  return output;
 };
