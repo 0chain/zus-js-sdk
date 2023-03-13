@@ -164,7 +164,7 @@ async function bulkUpload(options) {
       remotePath: obj.remotePath,
       readChunkFuncName: readChunkFuncName,
       fileSize: obj.file.size,
-      thumbnailBytes: obj.thumbnailBytes,
+      thumbnailBytes: obj.thumbnailBytes ? obj.thumbnailBytes.toString() : "",
       encrypt: obj.encrypt,
       isUpdate: obj.isUpdate,
       isRepair: obj.isRepair,
