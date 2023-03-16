@@ -487,3 +487,55 @@ export const decodeAuthTicket = async (authTicket) => {
   const output = await goWasm.sdk.decodeAuthTicket(authTicket);
   return output;
 };
+
+//ethereumAddress string, bridgeAddress string, authorizersAddress string, wzcnAddress string, ethereumNodeURL string, gasLimit uint64, value int64, consensusThreshold float64
+export const initBridge = async (
+  ethereumAddress,
+  bridgeAddress,
+  authorizersAddress,
+  wzcnAddress,
+  ethereumNodeURL,
+  gasLimit,
+  value,
+  consensusThreshold,
+) => {
+  console.log(
+    "initBridge",
+    ethereumAddress,
+    bridgeAddress,
+    authorizersAddress,
+    wzcnAddress,
+    ethereumNodeURL,
+    gasLimit,
+    value,
+    consensusThreshold,
+  );
+  await goWasm.sdk.initBridge(
+    ethereumAddress,
+    bridgeAddress,
+    authorizersAddress,
+    wzcnAddress,
+    ethereumNodeURL,
+    gasLimit,
+    value,
+    consensusThreshold,
+  );
+};
+
+export const burnZCN = async (amount) => {
+  console.log("burnZCN", amount);
+  const hash = await goWasm.sdk.burnZCN(amount);
+  return hash;
+};
+
+export const mintZCN = async (burnTrxHash, timeout) => {
+  console.log("mintZCN", burnTrxHash, timeout);
+  const hash = await goWasm.sdk.mintZCN(burnTrxHash, timeout);
+  return hash;
+};
+
+export const getMintWZCNPayload = async (burnTrxHash) => {
+  console.log("getMintWZCNPayload", burnTrxHash);
+  const result = await goWasm.sdk.getMintWZCNPayload(burnTrxHash);
+  return result;
+};
