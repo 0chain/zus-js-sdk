@@ -55,10 +55,10 @@ export const getBalanceWasm = async (clientId) => {
   return balanceObj;
 };
 
-export const setWallet = async (clientID, privateKey, publicKey) => {
-  console.log("START setWallet", { clientID, privateKey, publicKey });
-  await goWasm.setWallet(bls, clientID, privateKey, publicKey);
-  console.log("END setWallet", { clientID, privateKey, publicKey });
+export const setWallet = async (clientID, privateKey, publicKey, mnemonic) => {
+  console.log("START setWallet", { clientID, privateKey, publicKey, mnemonic });
+  await goWasm.setWallet(bls, clientID, privateKey, publicKey, mnemonic);
+  console.log("END setWallet", { clientID, privateKey, publicKey, mnemonic });
 };
 
 export const listAllocations = async () => {
