@@ -116,11 +116,6 @@ export const reloadAllocation = async (allocationId) => {
   return allocation;
 };
 
-export const transferAllocation = async (allocationId, newOwnerId, newOwnerPublicKey) => {
-  console.log("transferAllocation");
-  await goWasm.sdk.transferAllocation(allocationId, newOwnerId, newOwnerPublicKey);
-};
-
 export const freezeAllocation = async (allocationId) => {
   console.log("freezeAllocation");
   const hash = await goWasm.sdk.freezeAllocation(allocationId);
