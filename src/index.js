@@ -483,6 +483,46 @@ export const decodeAuthTicket = async (authTicket) => {
   return output;
 };
 
+export const decodeAuthTicketWasm = async (authTicket) => {
+  console.log("decodeAuthTicketWasm", authTicket);
+  let resp = {};
+
+  let decoded = Buffer.from(authTicket, "base64");
+  let input = {};
+  try {
+    input = JSON.parse(decoded);
+  } catch (err) {
+    console.error("error unmarshalling json", err);
+    return [resp, err];
+  }
+
+  if ("marker" in input) {
+    let str = input["marker"];
+    let decodedMarker = Buffer.from(str, "base64");
+    let markerInput = {};
+    try {
+      markerInput = JSON.parse(decodedMarker);
+    } catch (err) {
+      console.error("error unmarshaling markerInput", err);
+      return [resp, err];
+    }
+    let lock = markerInput["free_tokens"];
+    resp.Marker = JSON.stringify(markerInput);
+    let tokens = parseFloat(lock / Math.pow(10, 10));
+    resp.Tokens = tokens;
+  }
+
+  if ("recipient_public_key" in input) {
+    let recipientPublicKey = input["recipient_public_key"];
+    if (typeof recipientPublicKey !== "string") {
+      return [resp, new Error("recipient_public_key is required")];
+    }
+    resp.RecipientPublicKey = recipientPublicKey;
+  }
+
+  return [resp, null];
+};
+
 //ethereumAddress string, bridgeAddress string, authorizersAddress string, wzcnAddress string, ethereumNodeURL string, gasLimit uint64, value int64, consensusThreshold float64
 export const initBridge = async (
   ethereumAddress,
