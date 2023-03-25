@@ -497,26 +497,32 @@ export const decodeAuthTicketWasm = async (authTicket) => {
   }
 
   if ("marker" in input) {
-    let str = input["marker"];
+    let str = input.marker;
     let decodedMarker = Buffer.from(str, "base64");
+    console.log("decodedMarker", decodedMarker);
+
     let markerInput = {};
     try {
       markerInput = JSON.parse(decodedMarker);
+      console.log("markerInput", markerInput);
     } catch (err) {
       console.error("error unmarshaling markerInput", err);
       return [resp, err];
     }
-    let lock = markerInput["free_tokens"];
+    let lock = markerInput.free_tokens;
+    console.log("lock", lock);
     resp.Marker = JSON.stringify(markerInput);
     let tokens = parseFloat(lock / Math.pow(10, 10));
+    console.log("tokens", tokens);
     resp.Tokens = tokens;
   }
 
   if ("recipient_public_key" in input) {
-    let recipientPublicKey = input["recipient_public_key"];
+    let recipientPublicKey = input.recipient_public_key;
     if (typeof recipientPublicKey !== "string") {
       return [resp, new Error("recipient_public_key is required")];
     }
+    console.log("recipientPublicKey", recipientPublicKey);
     resp.RecipientPublicKey = recipientPublicKey;
   }
 
