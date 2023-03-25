@@ -128,30 +128,35 @@ export const cancelAllocation = async (allocationId) => {
   return hash;
 };
 
-//allocationId string, name string,size, expiry int64,lock int64,setImmutable, updateTerms bool,addBlobberId, removeBlobberId string
+//allocationId string, size, expiry int64,lock int64, updateTerms bool,addBlobberId, removeBlobberId string
 export const updateAllocation = async (
   allocationId,
-  name,
   size,
   expiry,
   lock,
-  setImmutable,
   updateTerms,
   addBlobberId,
   removeBlobberId,
 ) => {
-  console.log("updateAllocation");
-  const hash = await goWasm.sdk.updateAllocation(
+  console.log("updateAllocation", {
     allocationId,
-    name,
     size,
     expiry,
     lock,
-    setImmutable,
+    updateTerms,
+    addBlobberId,
+    removeBlobberId,
+  });
+  const hash = await goWasm.sdk.updateAllocation(
+    allocationId,
+    size,
+    expiry,
+    lock,
     updateTerms,
     addBlobberId,
     removeBlobberId,
   );
+  console.log("hash", hash);
   return hash;
 };
 
