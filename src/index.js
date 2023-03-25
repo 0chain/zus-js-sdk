@@ -479,54 +479,16 @@ export const recoverWallet = async (mnemonic) => {
 
 export const decodeAuthTicket = async (authTicket) => {
   console.log("decodeAuthTicket", authTicket);
-  const output = await goWasm.sdk.decodeAuthTicket(authTicket);
-  return output;
-};
-
-export const decodeAuthTicketWasm = async (authTicket) => {
-  console.log("decodeAuthTicketWasm", authTicket);
-  let resp = {};
-
   let decoded = Buffer.from(authTicket, "base64");
-  let input = {};
+  console.log("decoded", decoded);
+
+  let output = {};
   try {
-    input = JSON.parse(decoded);
+    output = JSON.parse(decoded);
   } catch (err) {
     console.error("error unmarshalling json", err);
-    return [resp, err];
   }
-
-  if ("marker" in input) {
-    let str = input.marker;
-    let decodedMarker = Buffer.from(str, "base64");
-    console.log("decodedMarker", decodedMarker);
-
-    let markerInput = {};
-    try {
-      markerInput = JSON.parse(decodedMarker);
-      console.log("markerInput", markerInput);
-    } catch (err) {
-      console.error("error unmarshaling markerInput", err);
-      return [resp, err];
-    }
-    let lock = markerInput.free_tokens;
-    console.log("lock", lock);
-    resp.Marker = JSON.stringify(markerInput);
-    let tokens = parseFloat(lock / Math.pow(10, 10));
-    console.log("tokens", tokens);
-    resp.Tokens = tokens;
-  }
-
-  if ("recipient_public_key" in input) {
-    let recipientPublicKey = input.recipient_public_key;
-    if (typeof recipientPublicKey !== "string") {
-      return [resp, new Error("recipient_public_key is required")];
-    }
-    console.log("recipientPublicKey", recipientPublicKey);
-    resp.RecipientPublicKey = recipientPublicKey;
-  }
-
-  return [resp, null];
+  return output;
 };
 
 //ethereumAddress string, bridgeAddress string, authorizersAddress string, wzcnAddress string, ethereumNodeURL string, gasLimit uint64, value int64, consensusThreshold float64
