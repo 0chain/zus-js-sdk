@@ -1,29 +1,93 @@
-# ZUS JS Client SDK
+# ZÜS JS Client SDK
 
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
-ZUS SDK is a JS Client SDK to interact with 0Chain network.
+The Züs SDK is a JavaScript client library that provides a convenient interface for interacting with the Züs Network. It allows developers to perform various operations such as creating and managing allocations, uploading and downloading files, executing smart contracts, and more.
 
 ## Get Started
+
+This sections aims at getting you started with the Züs SDK. For a detailed documentation and reference, please refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started).
 
 ### Install
 
 ```bash
-npm install zus-sdk
+npm install @zerochain/zus-sdk
+
+# or
+
+yarn add @zerochain/zus-sdk
 ```
 
-### Usage
+## Usage
+
+To use the Züs SDK in your project, import the necessary functions and utilities:
 
 ```js
-import zus from 'zus-sdk';
-
-zus.registerClient(config)
-
-zus.restoreWallet(mnemonic)
-
-zus.sendTransaction(fromAccount, toWalletId, value, note)
-
+import { init, createWasm, getBalance, sendTransaction } from "@zerochain/zus-sdk";
 ```
+
+### Initialize WebAssembly
+
+Before using the Züs SDK, you need to initialize the WebAssembly module by calling the init function:
+
+```js
+const config = {
+  // configuration options
+};
+
+await init(config);
+const wasm = await createWasm();
+```
+
+The `init` function initializes the Züs SDK with the provided configuration, and `createWasm` returns the WebAssembly instance.
+
+### Get Balance
+
+To get the balance of a client, use the `getBalance` function:
+
+```js
+const clientId = "client_id";
+const balance = await getBalance(clientId);
+
+console.log(balance);
+```
+
+The `getBalance` function retrieves the balance of the specified client from the Züs Network.
+
+### Send Transaction
+
+To send a transaction from one client to another, use the `sendTransaction` function:
+
+```js
+const fromClient = "sender_client_id";
+const toClient = "recipient_client_id";
+const value = 10; // transaction value
+const note = "Transaction note";
+
+const response = await sendTransaction(fromClient, toClient, value, note);
+
+console.log(response);
+```
+
+The `sendTransaction` function sends a transaction from the specified sender client to the recipient client with the specified value and note.
+
+Refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started) for detailed information about the usage and detailed references.
+
+## Utilities
+
+The Züs SDK also provides some utility functions that may be helpful during development:
+
+- `createWallet()`: Generates a new wallet with a random mnemonic and returns the wallet information.
+- `recoverWallet(mnemonic: string)`: Recovers a wallet using a given mnemonic and returns the wallet information.
+- `decodeAuthTicket(authTicket: string)`: Decodes an authentication ticket and returns the decoded object.
+- `truncateAddress(addressString: string, start: number, flag: boolean, end: number): string`: Truncates an address string for display purposes.
+- `hexStringToByte(str: string): Uint8Array`: Converts a hexadecimal string to a Uint8Array.
+
+These utility functions can be imported and used as needed in your application.
+
+With the provided functions and utilities, developers can easily interact with the ZeroChain network, perform transactions, retrieve balances, and utilize various utility functions.
+
+Please refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started) for more details and usage examples.
 
 ## Contributing
 
@@ -42,4 +106,4 @@ Read our [contributing guide](.github/CONTRIBUTING.md) to learn about our develo
 
 ### [LICENSE](./LICENSE)
 
-This project is licensed under the [MIT License](./LICENSE), meaning that you're free to modify, distribute, and / or use it for any commercial or private project.
+The SDK is released under the [MIT License](./LICENSE).

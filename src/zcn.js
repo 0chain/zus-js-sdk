@@ -20,6 +20,12 @@
 /* tslint:disable:no-console */
 const g = global || window || self;
 
+/**
+ * Converts a hexadecimal string to a Uint8Array.
+ *
+ * @param {string} str - The hexadecimal string to convert.
+ * @returns {Uint8Array} - The Uint8Array containing the byte values.
+ */
 function hexStringToByte(str) {
   if (!str) return new Uint8Array();
 
@@ -31,6 +37,12 @@ function hexStringToByte(str) {
   return new Uint8Array(a);
 }
 
+/**
+ * Signs a hash using BLS signature scheme.
+ *
+ * @param {string} hash - The hash to be signed.
+ * @returns {string} - The serialized signature in hexadecimal format.
+ */
 function blsSign(hash) {
   console.log("blsSign");
   const { jsProxy } = g.__zcn_wasm__;
@@ -123,17 +135,12 @@ g.__zcn_wasm__ = g.__zcn_wasm_ || {
  */
 const bridge = g.__zcn_wasm__;
 
-// bulk upload files with FileReader
-// objects: the list of upload object
-//  - allocationId: string
-//  - remotePath: string
-//  - file: File
-//  - thumbnailBytes: []byte
-//  - encrypt: bool
-//  - isUpdate: bool
-//  - isRepair: bool
-//  - numBlocks: int
-//  - callback: function(totalBytes,completedBytes,error)
+/**
+ * Performs a bulk upload of multiple files.
+ *
+ * @param {Array} options - An array of upload options for each file.
+ * @returns {Promise} - A promise that resolves to the upload result.
+ */
 async function bulkUpload(options) {
   const start = bridge.glob.index;
   const opts = options.map((obj) => {
@@ -185,6 +192,12 @@ async function bulkUpload(options) {
   return result;
 }
 
+/**
+ * Signs a hash using BLS signature.
+ *
+ * @param {string} hash - The hash to sign.
+ * @returns {string} - The serialized BLS signature.
+ */
 async function blsSign(hash) {
   console.log("async blsSign", hash);
   if (!bridge.jsProxy && !bridge.jsProxy.secretKey) {
@@ -209,6 +222,13 @@ async function blsSign(hash) {
   return sig.serializeToHexStr();
 }
 
+/**
+ * Verifies a BLS signature against a given hash.
+ *
+ * @param {string} signature - The serialized BLS signature.
+ * @param {string} hash - The hash to verify the signature against.
+ * @returns {boolean} - A boolean indicating whether the signature is valid or not.
+ */
 async function blsVerify(signature, hash) {
   if (!bridge.jsProxy && !bridge.jsProxy.publicKey) {
     const errMsg = "err: bls.publicKey is not initialized";
@@ -221,6 +241,15 @@ async function blsVerify(signature, hash) {
   return bridge.jsProxy.publicKey.verify(sig, bytes);
 }
 
+/**
+ * Sets the wallet information in the bridge and the Go instance.
+ *
+ * @param {Object} bls - The BLS object.
+ * @param {string} clientID - The client ID.
+ * @param {string} sk - The serialized secret key.
+ * @param {string} pk - The serialized public key.
+ * @param {string} mnemonic - The mnemonic.
+ */
 async function setWallet(bls, clientID, sk, pk, mnemonic) {
   if (!bls) throw new Error("bls is undefined, on wasm setWallet fn");
   if (!sk) throw new Error("secret key is undefined, on wasm setWallet fn");
@@ -246,6 +275,11 @@ async function setWallet(bls, clientID, sk, pk, mnemonic) {
   }
 }
 
+/**
+ * Loads the WebAssembly (Wasm) module and runs it within the Go instance.
+ *
+ * @param {Go} go - The Go instance.
+ */
 async function loadWasm(go) {
   // If instantiateStreaming doesn't exists, polyfill/create it on top of instantiate
   if (!WebAssembly?.instantiateStreaming) {
@@ -268,6 +302,11 @@ async function loadWasm(go) {
   go.run(result.instance);
 }
 
+/**
+ * Creates a WebAssembly (Wasm) instance and returns a proxy object for accessing SDK methods.
+ *
+ * @returns {Object} - The proxy object for accessing SDK methods.
+ */
 export async function createWasm() {
   if (bridge.__proxy__) {
     return bridge.__proxy__;
