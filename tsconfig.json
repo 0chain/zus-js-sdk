@@ -7,7 +7,7 @@
     "declaration": true,
     "strict": true,
     "outDir": "lib",
-    "removeComments": true,
+    "removeComments": false,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "sourceMap": true,
