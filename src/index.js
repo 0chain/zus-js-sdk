@@ -45,7 +45,6 @@ export const init = async (config) => {
   Buffer = buff;
 };
 
-export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
 
 /**
  * Retrieves the balance for a given client ID.
