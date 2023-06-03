@@ -45,7 +45,6 @@ export const init = async (config) => {
   Buffer = buff;
 };
 
-
 /**
  * Retrieves the balance for a given client ID.
  *
