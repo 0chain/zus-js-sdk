@@ -117,7 +117,7 @@ export const listAllocations = async () => {
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
  * @param {number} allocationConfig.maxWritePrice - The maximum price for writing to the allocation.
- * @param {boolean} allocationConfig.lock - Flag indicating if the allocation should be locked.
+ * @param {number} allocationConfig.lock - The lock for the allocation.
  * @returns {Promise<void>} - A Promise that resolves when the allocation has been created.
  */
 export const createAllocation = async (allocationConfig) => {
@@ -148,7 +148,7 @@ export const createAllocation = async (allocationConfig) => {
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
  * @param {number} allocationConfig.maxWritePrice - The maximum price for writing to the allocation.
- * @param {boolean} allocationConfig.lock - Flag indicating if the allocation should be locked.
+ * @param {number} allocationConfig.lock - The lock for the allocation.
  * @param {Array} allocationConfig.blobbers - An array of blobber addresses associated with the allocation.
  * @returns {Promise<any>} - A Promise that resolves to the result of creating the allocation.
  */
