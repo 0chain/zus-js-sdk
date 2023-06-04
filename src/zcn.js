@@ -18,7 +18,7 @@
 "use strict";
 
 /* tslint:disable:no-console */
-const g = window;
+const g = global || window || self;
 
 /**
  * Converts a hexadecimal string to a Uint8Array.
