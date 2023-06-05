@@ -30,7 +30,7 @@ const MinerSmartContractAddress =
 const InterestPoolSmartContractAddress =
   "cf8d0df9bd8cc637a4ff4e792ffe3686da6220c45f0e1103baa609f3f1751ef4";
 
-const Endpoints = {
+export const Endpoints = {
   REGISTER_CLIENT: "/v1/client/put",
   PUT_TRANSACTION: "/v1/transaction/put",
 
