@@ -17,6 +17,7 @@
 
 "use strict";
 
+/* tslint:disable:no-console */
 const g = global || window || self;
 
 /**
@@ -43,12 +44,12 @@ function hexStringToByte(str) {
  * @returns {string} - The serialized signature in hexadecimal format.
  */
 function blsSign(hash) {
-  // console.log("blsSign");
+  console.log("blsSign");
   const { jsProxy } = g.__zcn_wasm__;
 
   if (!jsProxy || !jsProxy.secretKey) {
     const errMsg = "err: bls.secretKey is not initialized";
-    // console.warn(errMsg);
+    console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -58,7 +59,7 @@ function blsSign(hash) {
 
   if (!sig) {
     const errMsg = "err: wasm blsSign function failed to sign transaction";
-    // console.warn(errMsg);
+    console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -115,7 +116,9 @@ const maxTime = 10 * 1000;
 
 // Initialize __zcn_wasm__
 g.__zcn_wasm__ = g.__zcn_wasm_ || {
-  glob: { index: 0 },
+  glob: {
+    index: 0,
+  },
   jsProxy: {
     secretKey: null,
     publicKey: null,
@@ -139,18 +142,6 @@ const bridge = g.__zcn_wasm__;
  * @param {Array} options - An array of upload options for each file.
  * @returns {Promise} - A promise that resolves to the upload result.
  */
-
-// bulk upload files with FileReader
-// objects: the list of upload object
-//  - allocationId: string
-//  - remotePath: string
-//  - file: File
-//  - thumbnailBytes: []byte
-//  - encrypt: bool
-//  - isUpdate: bool
-//  - isRepair: bool
-//  - numBlocks: int
-//  - callback: function(totalBytes,completedBytes,error)
 async function bulkUpload(options) {
   const start = bridge.glob.index;
   const opts = options.map((obj) => {
@@ -159,14 +150,14 @@ async function bulkUpload(options) {
     const readChunkFuncName = "__zcn_upload_reader_" + i.toString();
     const callbackFuncName = "__zcn_upload_callback_" + i.toString();
     g[readChunkFuncName] = async (offset, chunkSize) => {
-      // console.log(
-      //   "bulk_upload: read chunk remotePath:" +
-      //     obj.remotePath +
-      //     " offset:" +
-      //     offset +
-      //     " chunkSize:" +
-      //     chunkSize,
-      // );
+      console.log(
+        "bulk_upload: read chunk remotePath:" +
+          obj.remotePath +
+          " offset:" +
+          offset +
+          " chunkSize:" +
+          chunkSize,
+      );
       const chunk = await readChunk(offset, chunkSize, obj.file);
       return chunk.buffer;
     };
@@ -181,9 +172,8 @@ async function bulkUpload(options) {
       remotePath: obj.remotePath,
       readChunkFuncName: readChunkFuncName,
       fileSize: obj.file.size,
-      thumbnailBytes: Array.from(obj?.thumbnailBytes || []).toString(),
+      thumbnailBytes: obj.thumbnailBytes ? obj.thumbnailBytes.toString() : "",
       encrypt: obj.encrypt,
-      webstreaming: obj.webstreaming,
       isUpdate: obj.isUpdate,
       isRepair: obj.isRepair,
       numBlocks: obj.numBlocks,
@@ -191,7 +181,7 @@ async function bulkUpload(options) {
     };
   });
 
-  // console.log("upload opts", opts);
+  console.log("upload opts", opts);
 
   const end = bridge.glob.index;
 
@@ -204,6 +194,36 @@ async function bulkUpload(options) {
 }
 
 /**
+ * Signs a hash using BLS signature.
+ *
+ * @param {string} hash - The hash to sign.
+ * @returns {string} - The serialized BLS signature.
+ */
+async function blsSign(hash) {
+  console.log("async blsSign", hash);
+  if (!bridge.jsProxy && !bridge.jsProxy.secretKey) {
+    const errMsg = "err: bls.secretKey is not initialized";
+    console.warn(errMsg);
+    throw new Error(errMsg);
+  }
+
+  const bytes = hexStringToByte(hash);
+
+  console.log("bridge.jsProxy.secretKey", bridge.jsProxy.secretKey);
+  const sig = bridge.jsProxy.secretKey.sign(bytes);
+  console.log("sig", sig);
+
+  if (!sig) {
+    const errMsg = "err: wasm blsSign function failed to sign transaction";
+    console.warn(errMsg);
+    throw new Error(errMsg);
+  }
+
+  console.log("sig.serializeToHexStr()", sig.serializeToHexStr());
+  return sig.serializeToHexStr();
+}
+
+/**
  * Verifies a BLS signature against a given hash.
  *
  * @param {string} signature - The serialized BLS signature.
@@ -213,7 +233,7 @@ async function bulkUpload(options) {
 async function blsVerify(signature, hash) {
   if (!bridge.jsProxy && !bridge.jsProxy.publicKey) {
     const errMsg = "err: bls.publicKey is not initialized";
-    // console.warn(errMsg);
+    console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -252,9 +272,18 @@ async function setWallet(bls, clientID, sk, pk, mnemonic) {
   if (!pk) throw new Error("public key is undefined, on wasm setWallet fn");
 
   if (bridge.walletId !== clientID) {
+    console.log("setWallet: ", clientID, sk, pk);
     bridge.jsProxy.bls = bls;
     bridge.jsProxy.secretKey = bls.deserializeHexStrToSecretKey(sk);
     bridge.jsProxy.publicKey = bls.deserializeHexStrToPublicKey(pk);
+    console.log(
+      "inside setWallet- bls:",
+      bls,
+      ",secretKey:",
+      bridge.jsProxy.secretKey,
+      ",publicKey:",
+      bridge.jsProxy.publicKey,
+    );
 
     // use proxy.sdk to detect if sdk is ready
     await bridge.__proxy__.sdk.setWallet(clientID, pk, sk, mnemonic);
@@ -276,16 +305,13 @@ async function loadWasm(go) {
     };
   }
 
-  const result = await WebAssembly.instantiateStreaming(
-    await fetch("zcn.wasm?v=20221230"),
-    go.importObject,
-  );
+  const result = await WebAssembly.instantiateStreaming(await fetch("zcn.wasm"), go.importObject);
 
   setTimeout(() => {
     if (g.__zcn_wasm__?.__wasm_initialized__ !== true) {
-      // console.warn(
-      //   "wasm window.__zcn_wasm__ (zcn.__wasm_initialized__) still not true after max time",
-      // );
+      console.warn(
+        "wasm window.__zcn_wasm__ (zcn.__wasm_initialized__) still not true after max time",
+      );
     }
   }, maxTime);
 
@@ -368,8 +394,8 @@ export async function createWasm() {
   );
 
   const proxy = {
-    bulkUpload,
-    setWallet,
+    bulkUpload: bulkUpload,
+    setWallet: setWallet,
     sdk: sdkProxy, //expose sdk methods for js
     jsProxy, //expose js methods for go
   };
