@@ -43,12 +43,12 @@ function hexStringToByte(str) {
  * @returns {string} - The serialized signature in hexadecimal format.
  */
 function blsSign(hash) {
-  console.log("blsSign");
+  // console.log("blsSign");
   const { jsProxy } = g.__zcn_wasm__;
 
   if (!jsProxy || !jsProxy.secretKey) {
     const errMsg = "err: bls.secretKey is not initialized";
-    console.warn(errMsg);
+    // console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -58,7 +58,7 @@ function blsSign(hash) {
 
   if (!sig) {
     const errMsg = "err: wasm blsSign function failed to sign transaction";
-    console.warn(errMsg);
+    // console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -159,14 +159,14 @@ async function bulkUpload(options) {
     const readChunkFuncName = "__zcn_upload_reader_" + i.toString();
     const callbackFuncName = "__zcn_upload_callback_" + i.toString();
     g[readChunkFuncName] = async (offset, chunkSize) => {
-      console.log(
-        "bulk_upload: read chunk remotePath:" +
-          obj.remotePath +
-          " offset:" +
-          offset +
-          " chunkSize:" +
-          chunkSize,
-      );
+      // console.log(
+      //   "bulk_upload: read chunk remotePath:" +
+      //     obj.remotePath +
+      //     " offset:" +
+      //     offset +
+      //     " chunkSize:" +
+      //     chunkSize,
+      // );
       const chunk = await readChunk(offset, chunkSize, obj.file);
       return chunk.buffer;
     };
@@ -191,7 +191,7 @@ async function bulkUpload(options) {
     };
   });
 
-  console.log("upload opts", opts);
+  // console.log("upload opts", opts);
 
   const end = bridge.glob.index;
 
@@ -213,7 +213,7 @@ async function bulkUpload(options) {
 async function blsVerify(signature, hash) {
   if (!bridge.jsProxy && !bridge.jsProxy.publicKey) {
     const errMsg = "err: bls.publicKey is not initialized";
-    console.warn(errMsg);
+    // console.warn(errMsg);
     throw new Error(errMsg);
   }
 
@@ -283,9 +283,9 @@ async function loadWasm(go) {
 
   setTimeout(() => {
     if (g.__zcn_wasm__?.__wasm_initialized__ !== true) {
-      console.warn(
-        "wasm window.__zcn_wasm__ (zcn.__wasm_initialized__) still not true after max time",
-      );
+      // console.warn(
+      //   "wasm window.__zcn_wasm__ (zcn.__wasm_initialized__) still not true after max time",
+      // );
     }
   }, maxTime);
 
