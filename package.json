@@ -1,12 +1,12 @@
 {
   "name": "@zerochain/zus-sdk",
-  "version": "0.0.33",
+  "version": "0.0.36",
   "description": "[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)",
   "main": "./lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "start": "node src/example.js",
-    "test": "jest --config jestconfig.json",
+    "test": "jest --passWithNoTests --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
