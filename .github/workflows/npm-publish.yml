@@ -5,7 +5,7 @@ name: Node.js Package
 
 on:
   workflow_dispatch:
-  
+
   release:
     types: [created]
 
@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Action checkout.
         uses: actions/checkout@v3
-      
+
       - name: Setting up Node.
         uses: actions/setup-node@v3
         with:
@@ -49,7 +49,7 @@ jobs:
       - name: Installing yarn.
         run: |
           npm install --global yarn
-          
+
       - name: Installing dependencies.
         run: |
           yarn install --frozen-lockfile
@@ -57,4 +57,4 @@ jobs:
       - name: Creating build.
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token2}}

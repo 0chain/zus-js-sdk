@@ -45,8 +45,6 @@ export const init = async (config) => {
   Buffer = buff;
 };
 
-export const Greeter = (name) => `Hello ${name?.toUpperCase()}`;
-
 /**
  * Retrieves the balance for a given client ID.
  *
@@ -119,7 +117,7 @@ export const listAllocations = async () => {
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
  * @param {number} allocationConfig.maxWritePrice - The maximum price for writing to the allocation.
- * @param {boolean} allocationConfig.lock - Flag indicating if the allocation should be locked.
+ * @param {number} allocationConfig.lock - The lock for the allocation.
  * @returns {Promise<void>} - A Promise that resolves when the allocation has been created.
  */
 export const createAllocation = async (allocationConfig) => {
@@ -150,7 +148,7 @@ export const createAllocation = async (allocationConfig) => {
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
  * @param {number} allocationConfig.maxWritePrice - The maximum price for writing to the allocation.
- * @param {boolean} allocationConfig.lock - Flag indicating if the allocation should be locked.
+ * @param {number} allocationConfig.lock - The lock for the allocation.
  * @param {Array} allocationConfig.blobbers - An array of blobber addresses associated with the allocation.
  * @returns {Promise<any>} - A Promise that resolves to the result of creating the allocation.
  */
@@ -960,10 +958,10 @@ export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
   const allocation = await getAllocation(allocationId);
   const randomIndex = Math.floor(Math.random() * allocation?.blobbers?.length);
   const blobber = allocation?.blobbers[randomIndex];
-  const url = blobber.url + Endpoints.ALLOCATION_FILE_LIST + allocationId
+  const url = blobber.url + Endpoints.ALLOCATION_FILE_LIST + allocationId;
   return getReqBlobbers(
     url,
     { path_hash: lookupHash },
     walletId
-  )
+  );
 }
