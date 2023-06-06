@@ -17,7 +17,6 @@
 
 "use strict";
 
-/* tslint:disable:no-console */
 const g = global || window || self;
 
 /**
@@ -116,9 +115,7 @@ const maxTime = 10 * 1000;
 
 // Initialize __zcn_wasm__
 g.__zcn_wasm__ = g.__zcn_wasm_ || {
-  glob: {
-    index: 0,
-  },
+  glob: { index: 0 },
   jsProxy: {
     secretKey: null,
     publicKey: null,
@@ -142,6 +139,18 @@ const bridge = g.__zcn_wasm__;
  * @param {Array} options - An array of upload options for each file.
  * @returns {Promise} - A promise that resolves to the upload result.
  */
+
+// bulk upload files with FileReader
+// objects: the list of upload object
+//  - allocationId: string
+//  - remotePath: string
+//  - file: File
+//  - thumbnailBytes: []byte
+//  - encrypt: bool
+//  - isUpdate: bool
+//  - isRepair: bool
+//  - numBlocks: int
+//  - callback: function(totalBytes,completedBytes,error)
 async function bulkUpload(options) {
   const start = bridge.glob.index;
   const opts = options.map((obj) => {
@@ -172,8 +181,9 @@ async function bulkUpload(options) {
       remotePath: obj.remotePath,
       readChunkFuncName: readChunkFuncName,
       fileSize: obj.file.size,
-      thumbnailBytes: obj.thumbnailBytes ? obj.thumbnailBytes.toString() : "",
+      thumbnailBytes: Array.from(obj?.thumbnailBytes || []).toString(),
       encrypt: obj.encrypt,
+      webstreaming: obj.webstreaming,
       isUpdate: obj.isUpdate,
       isRepair: obj.isRepair,
       numBlocks: obj.numBlocks,
@@ -191,36 +201,6 @@ async function bulkUpload(options) {
     g["__zcn_upload_callback_" + i.toString()] = null;
   }
   return result;
-}
-
-/**
- * Signs a hash using BLS signature.
- *
- * @param {string} hash - The hash to sign.
- * @returns {string} - The serialized BLS signature.
- */
-async function blsSign(hash) {
-  console.log("async blsSign", hash);
-  if (!bridge.jsProxy && !bridge.jsProxy.secretKey) {
-    const errMsg = "err: bls.secretKey is not initialized";
-    console.warn(errMsg);
-    throw new Error(errMsg);
-  }
-
-  const bytes = hexStringToByte(hash);
-
-  console.log("bridge.jsProxy.secretKey", bridge.jsProxy.secretKey);
-  const sig = bridge.jsProxy.secretKey.sign(bytes);
-  console.log("sig", sig);
-
-  if (!sig) {
-    const errMsg = "err: wasm blsSign function failed to sign transaction";
-    console.warn(errMsg);
-    throw new Error(errMsg);
-  }
-
-  console.log("sig.serializeToHexStr()", sig.serializeToHexStr());
-  return sig.serializeToHexStr();
 }
 
 /**
@@ -271,19 +251,10 @@ async function setWallet(bls, clientID, sk, pk, mnemonic) {
   if (!sk) throw new Error("secret key is undefined, on wasm setWallet fn");
   if (!pk) throw new Error("public key is undefined, on wasm setWallet fn");
 
-  if (bridge.walletId !== clientID) {
-    console.log("setWallet: ", clientID, sk, pk);
+  if (bridge.walletId != clientID) {
     bridge.jsProxy.bls = bls;
     bridge.jsProxy.secretKey = bls.deserializeHexStrToSecretKey(sk);
     bridge.jsProxy.publicKey = bls.deserializeHexStrToPublicKey(pk);
-    console.log(
-      "inside setWallet- bls:",
-      bls,
-      ",secretKey:",
-      bridge.jsProxy.secretKey,
-      ",publicKey:",
-      bridge.jsProxy.publicKey,
-    );
 
     // use proxy.sdk to detect if sdk is ready
     await bridge.__proxy__.sdk.setWallet(clientID, pk, sk, mnemonic);
@@ -305,7 +276,10 @@ async function loadWasm(go) {
     };
   }
 
-  const result = await WebAssembly.instantiateStreaming(await fetch("zcn.wasm"), go.importObject);
+  const result = await WebAssembly.instantiateStreaming(
+    await fetch("zcn.wasm?v=20221230"),
+    go.importObject,
+  );
 
   setTimeout(() => {
     if (g.__zcn_wasm__?.__wasm_initialized__ !== true) {
@@ -394,8 +368,8 @@ export async function createWasm() {
   );
 
   const proxy = {
-    bulkUpload: bulkUpload,
-    setWallet: setWallet,
+    bulkUpload,
+    setWallet,
     sdk: sdkProxy, //expose sdk methods for js
     jsProxy, //expose js methods for go
   };
