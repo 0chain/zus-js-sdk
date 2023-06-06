@@ -1,4 +1,4 @@
-import { getBalanceUtil, submitTransaction } from "./utils";
+import { getBalanceUtil, submitTransaction, Endpoints, getReqBlobbers } from "./utils";
 import { createWasm } from "./zcn";
 import * as bip39 from "bip39";
 import { sha3_256 } from "js-sha3";
@@ -945,3 +945,23 @@ export const getMintWZCNPayload = async (burnTrxHash) => {
   const result = await goWasm.sdk.getMintWZCNPayload(burnTrxHash);
   return result;
 };
+
+/**
+ * Retrieves the list of files inside a shared directory using lookup_hash.
+ *
+ * @param {string} lookup_hash - lookup_hash of the directory.
+ * @param {string} allocation_id - the allocation the directory belongs to.
+ * @param {string} walletId - client id of owner of the allocation.
+ * @returns {Promise<any>} - A Promise that resolves to the list of files inside the directory.
+ */
+export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
+  const allocation = await getAllocation(allocationId);
+  const randomIndex = Math.floor(Math.random() * allocation?.blobbers?.length);
+  const blobber = allocation?.blobbers[randomIndex];
+  const url = blobber.url + Endpoints.ALLOCATION_FILE_LIST + allocationId;
+  return getReqBlobbers(
+    url,
+    { path_hash: lookupHash },
+    walletId
+  );
+}
