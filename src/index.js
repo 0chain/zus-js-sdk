@@ -948,6 +948,14 @@ export const getMintWZCNPayload = async (burnTrxHash) => {
   return result;
 };
 
+/**
+ * Retrieves the list of files inside a shared directory using lookup_hash.
+ *
+ * @param {string} lookup_hash - lookup_hash of the directory.
+ * @param {string} allocation_id - the allocation the directory belongs to.
+ * @param {string} walletId - client id of owner of the allocation.
+ * @returns {Promise<any>} - A Promise that resolves to the list of files inside the directory.
+ */
 export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
   const allocation = await getAllocation(allocationId);
   const randomIndex = Math.floor(Math.random() * allocation?.blobbers?.length);
