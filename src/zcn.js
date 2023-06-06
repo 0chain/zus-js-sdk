@@ -251,12 +251,11 @@ async function blsVerify(signature, hash) {
  * @returns {boolean} - A boolean indicating whether the signature is valid or not.
  */
 async function blsVerifyWith(pk, signature, hash) {
-  const publicKey = bridge.jsProxy.bls.deserializeHexStrToPublicKey(pk)
-  const bytes = hexStringToByte(hash)
-  const sig = bridge.jsProxy.bls.deserializeHexStrToSignature(signature)
-  return publicKey.verify(sig, bytes)
+  const publicKey = bridge.jsProxy.bls.deserializeHexStrToPublicKey(pk);
+  const bytes = hexStringToByte(hash);
+  const sig = bridge.jsProxy.bls.deserializeHexStrToSignature(signature);
+  return publicKey.verify(sig, bytes);
 }
-
 
 /**
  * Sets the wallet information in the bridge and the Go instance.
@@ -405,3 +404,8 @@ export async function createWasm() {
 
   return proxy;
 }
+
+//load and create wasm
+// createWasm().then((a) => {
+//   g.goWasm = a;
+// });
