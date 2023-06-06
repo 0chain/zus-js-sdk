@@ -251,7 +251,7 @@ async function setWallet(bls, clientID, sk, pk, mnemonic) {
   if (!sk) throw new Error("secret key is undefined, on wasm setWallet fn");
   if (!pk) throw new Error("public key is undefined, on wasm setWallet fn");
 
-  if (bridge.walletId != clientID) {
+  if (bridge.walletId !== clientID) {
     bridge.jsProxy.bls = bls;
     bridge.jsProxy.secretKey = bls.deserializeHexStrToSecretKey(sk);
     bridge.jsProxy.publicKey = bls.deserializeHexStrToPublicKey(pk);
