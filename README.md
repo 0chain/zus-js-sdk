@@ -8,15 +8,57 @@ The Züs SDK is a JavaScript client library that provides a convenient interface
 
 This sections aims at getting you started with the Züs SDK. For a detailed documentation and reference, please refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started).
 
-### Install
+- [Installation](#installation)
+- [SDK Reference](#sdk-reference)
+- [Contributing](#contributing)
 
-```bash
-npm install @zerochain/zus-sdk
+## Installation
 
-# or
+### Prerequisites
 
+#### Yarn Package Manager
+
+##### Linux
+
+```
+sudo apt update
+sudo apt install curl
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt install yarn -y
+```
+
+##### Mac
+
+In Mac Yarn can be installed using the Homebrew package manager. To install Yarn on macOS, open a terminal and type:
+
+```
+brew install yarn
+```
+
+Note: Make sure that Homebrew is installed properly using the command below
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+##### Windows
+
+Download yarn windows based msi installer from [here](https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn-1.22.19.msi)
+
+### Install zus-sdk
+
+Add the zus-sdk package for use in your project
+
+```
 yarn add @zerochain/zus-sdk
 ```
+
+## SDK Reference
+
+Zus JS-sdk provides many functions for implemention blobber,allocation and file operation functionalities in web applications.
+
+- See [gitbook](https://docs.zus.network/guides/zus-js-sdk/sdk-reference) for extensive list.
 
 ## Usage
 
