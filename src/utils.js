@@ -702,7 +702,7 @@ export const readBytes = (file) =>
     reader.readAsArrayBuffer(file);
   })
 
-  /**
+/**
  * Performs a GET request to a random miner URL from the given list of miners.
  *
  * @param {string[]} miners - An array of miner URLs.
