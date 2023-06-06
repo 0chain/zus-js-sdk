@@ -420,10 +420,6 @@ export const hideLogs = async () => {
   console.log("hideLogs");
   await goWasm.sdk.hideLogs();
 };
-export const hideLogs = async () => {
-  console.log("hideLogs");
-  await goWasm.sdk.hideLogs();
-};
 
 /**
  * Deletes an object within an allocation.

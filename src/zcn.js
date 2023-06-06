@@ -124,6 +124,7 @@ g.__zcn_wasm__ = g.__zcn_wasm_ || {
     publicKey: null,
     sign: blsSign,
     verify: blsVerify,
+    verifyWith: blsVerifyWith,
     createObjectURL,
     sleep,
   },
@@ -239,6 +240,21 @@ async function blsVerify(signature, hash) {
   const bytes = hexStringToByte(hash);
   const sig = bridge.jsProxy.bls.deserializeHexStrToSignature(signature);
   return bridge.jsProxy.publicKey.verify(sig, bytes);
+}
+
+/**
+ * Verifies a BLS signature against a given hash and public key.
+ *
+ * @param {string} pk - The public key.
+ * @param {string} signature - The serialized BLS signature.
+ * @param {string} hash - The hash to verify the signature against.
+ * @returns {boolean} - A boolean indicating whether the signature is valid or not.
+ */
+async function blsVerifyWith(pk, signature, hash) {
+  const publicKey = bridge.jsProxy.bls.deserializeHexStrToPublicKey(pk);
+  const bytes = hexStringToByte(hash);
+  const sig = bridge.jsProxy.bls.deserializeHexStrToSignature(signature);
+  return publicKey.verify(sig, bytes);
 }
 
 /**
