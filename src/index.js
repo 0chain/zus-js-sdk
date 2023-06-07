@@ -122,7 +122,7 @@ export const listAllocations = async () => {
  */
 export const createAllocation = async (allocationConfig) => {
   console.log("allocationConfig", allocationConfig);
-  await goWasm.sdk.createAllocation(
+  return await goWasm.sdk.createAllocation(
     allocationConfig.datashards,
     allocationConfig.parityshards,
     allocationConfig.size,
@@ -959,9 +959,5 @@ export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
   const randomIndex = Math.floor(Math.random() * allocation?.blobbers?.length);
   const blobber = allocation?.blobbers[randomIndex];
   const url = blobber.url + Endpoints.ALLOCATION_FILE_LIST + allocationId;
-  return getReqBlobbers(
-    url,
-    { path_hash: lookupHash },
-    walletId
-  );
-}
+  return getReqBlobbers(url, { path_hash: lookupHash }, walletId);
+};
