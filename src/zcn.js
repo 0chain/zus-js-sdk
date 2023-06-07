@@ -305,7 +305,10 @@ async function loadWasm(go) {
     };
   }
 
-  const result = await WebAssembly.instantiateStreaming(await fetch("zcn.wasm"), go.importObject);
+  const result = await WebAssembly.instantiateStreaming(
+    await fetch("zcn.wasm?v=20221230"),
+    go.importObject,
+  );
 
   setTimeout(() => {
     if (g.__zcn_wasm__?.__wasm_initialized__ !== true) {
