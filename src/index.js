@@ -323,12 +323,13 @@ export const download = async (
 
 /**
  * Retrieves a faucet token.
- *
+ * @param {number} amount - The amount of zcn tokens to retrieve.
  * @returns {Promise<void>} - A Promise that resolves when the faucet token has been obtained.
  */
-export const getFaucetToken = async () => {
+export const getFaucetToken = async (amount = 1) => {
   console.log("faucet before");
-  await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), 0);
+  const amountFloat64 = parseFloat(amount);
+  await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), amountFloat64);
   console.log("faucet after");
 };
 
@@ -962,7 +963,6 @@ export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
   return getReqBlobbers(url, { path_hash: lookupHash }, walletId);
 };
 
-// multiUpload
 /**
  * Upload multiple files to the blobbers.
  * @param {object} jsonBulkUploadOptions - Json Array of BulkUploadOptions.
