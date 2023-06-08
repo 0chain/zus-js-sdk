@@ -961,3 +961,13 @@ export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
   const url = blobber.url + Endpoints.ALLOCATION_FILE_LIST + allocationId;
   return getReqBlobbers(url, { path_hash: lookupHash }, walletId);
 };
+
+// multiUpload
+/**
+ * Upload multiple files to the blobbers.
+ * @param {object} jsonBulkUploadOptions - Json Array of BulkUploadOptions.
+ */
+export const multiUpload = async (jsonBulkUploadOptions) => {
+  const res = await goWasm.sdk.multiUpload(jsonBulkUploadOptions);
+  return res;
+};
