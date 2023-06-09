@@ -51,8 +51,8 @@ export const init = async (config) => {
  * @param {string} clientId - The client ID for which to retrieve the balance.
  * @returns {Promise<number>} - A Promise that resolves to the balance of the client identified by the clientId parameter.
  */
-export const getBalance = async (clientId) => {
-  return getBalanceUtil(clientId);
+export const getBalance = async (clientId, network) => {
+  return getBalanceUtil(clientId, network);
 };
 
 /**
@@ -64,9 +64,9 @@ export const getBalance = async (clientId) => {
  * @param {string} note - An optional note to be included with the transaction.
  * @returns {Promise<any>} - A Promise that resolves to the result of submitting the transaction.
  */
-export const sendTransaction = async (ae, toClientId, val, note) => {
+export const sendTransaction = async (ae, toClientId, val, note, network) => {
   console.log("sendTransaction from:", ae, "to:", toClientId, "value:", val, "note:", note);
-  return submitTransaction(ae, toClientId, val, note, TransactionType.SEND);
+  return submitTransaction(ae, toClientId, val, note, TransactionType.SEND, network);
 };
 
 /**

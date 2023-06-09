@@ -735,9 +735,9 @@ export const doGetReqToRandomMiner = async (miners, url, getData) => {
  * @param {string} clientId - The ID of the client.
  * @returns {Promise} - A promise that resolves with the balance information or rejects with an error.
  */
-export const getBalanceUtil = async (clientId) => {
+export const getBalanceUtil = async (clientId, network) => {
   return new Promise((resolve, reject) => {
-    getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
+    getConsensusedInformationFromSharders(network, Endpoints.GET_BALANCE, {
       client_id: clientId,
     })
       .then((res) => {
@@ -787,14 +787,14 @@ export const getTransactionResponse = (data) => {
  * @param {string} transactionType - The type of transaction.
  * @returns {Promise} - A promise that resolves with the transaction hash if the transaction is successful.
  */
-export const submitTransaction = async (ae, toClientId, val, note, transactionType) => {
+export const submitTransaction = async (ae, toClientId, val, note, transactionType, network) => {
   const hashPayload = sha3.sha3_256(note);
   const ts = Math.floor(new Date().getTime() / 1000);
 
   if (cachedNonce === undefined) {
       //initialize by 0 if there is no nonce from getBalance as well
       try {
-          const { nonce } = await getBalanceUtil(ae.id)
+          const { nonce } = await getBalanceUtil(ae.id, network)
           cachedNonce = nonce ?? 0   
       }
       catch (err) {
@@ -826,7 +826,7 @@ export const submitTransaction = async (ae, toClientId, val, note, transactionTy
   data.public_key = ae.public_key;
 
   return new Promise(function (resolve, reject) {
-    doParallelPostReqToAllMiners(configJson.miners, Endpoints.PUT_TRANSACTION, data)
+    doParallelPostReqToAllMiners(network, Endpoints.PUT_TRANSACTION, data)
         .then((response) => {
             cachedNonce +=1
 
