@@ -58,9 +58,9 @@ export const getBalance = async (clientId) => {
 /**
  * Sends a transaction from one client to another.
  *
- * @param {string} ae - The client ID initiating the transaction.
+ * @param {object} ae - The user wallet object.
  * @param {string} toClientId - The client ID receiving the transaction.
- * @param {number} val - The value (amount) to be sent in the transaction.
+ * @param {number} val - The value (amount in tokens) to be sent in the transaction.
  * @param {string} note - An optional note to be included with the transaction.
  * @returns {Promise<any>} - A Promise that resolves to the result of submitting the transaction.
  */

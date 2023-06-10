@@ -782,7 +782,7 @@ export const getTransactionResponse = (data) => {
  *
  * @param {Object} ae - The wallet object.
  * @param {string} toClientId - The client ID of the recipient.
- * @param {number} val - The value to be transferred.
+ * @param {number} val - The value to be transferred (in tokens).
  * @param {string} note - A note or description for the transaction.
  * @param {string} transactionType - The type of transaction.
  * @returns {Promise} - A promise that resolves with the transaction hash if the transaction is successful.
