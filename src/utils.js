@@ -15,12 +15,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-  /* tslint:disable:no-console */
+/* tslint:disable:no-console */
+
+import { basicReqWithDispatch } from "./requests";
+
 var sha3 = require("js-sha3");
 var JSONbig = require("json-bigint");
 var axios = require("axios");
 // import {Promise as BlueBirdPromise} from "bluebird";
-var BlueBirdPromise  = require("bluebird");
+var BlueBirdPromise = require("bluebird");
 var moment = require("moment");
 
 const StorageSmartContractAddress =
@@ -94,10 +97,12 @@ const configJson = {
     "https://dev3.zus.network/miner01",
     "https://dev1.zus.network/miner01",
   ],
-  sharders: ["https://dev1.zus.network/sharder01", "https://dev2.zus.network/sharder01", "https://dev3.zus.network/sharder01"],
+  sharders: [
+    "https://dev1.zus.network/sharder01",
+    "https://dev2.zus.network/sharder01",
+    "https://dev3.zus.network/sharder01",
+  ],
 };
-
-
 
 const consensusPercentage = 20;
 let cachedNonce;
@@ -162,23 +167,23 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
     const urls = sharders.map((sharder) => sharder + url);
     const promises = urls.map((oneUrl) => getReq(oneUrl, params));
     let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
-    console.log('BlueBirdPromise', BlueBirdPromise);
-    console.log('promises', promises)
+    console.log("BlueBirdPromise", BlueBirdPromise);
+    console.log("promises", promises);
 
     BlueBirdPromise.some(promises, percentage)
       .then(function (result) {
-        console.log('then result', result);
+        console.log("then result", result);
         const hashedResponses = result.map((r) => {
-          console.log('result.map r', r);
+          console.log("result.map r", r);
           return sha3.sha3_256(JSON.stringify(r.data));
         });
-        console.log('hashedResponses', hashedResponses)
+        console.log("hashedResponses", hashedResponses);
         const consensusResponse = getConsensusMessageFromResponse(
           hashedResponses,
           percentage,
           result,
         );
-        console.log('consensusResponse', consensusResponse)
+        console.log("consensusResponse", consensusResponse);
         if (consensusResponse === null) {
           reject({ error: "Not enough consensus" });
         } else {
@@ -186,7 +191,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
         }
       })
       .catch(BlueBirdPromise.AggregateError, function (err) {
-        console.log('err', err)
+        console.log("err", err);
         const errors = err.map((e) => {
           if (
             e.response !== undefined &&
@@ -205,7 +210,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
           err,
           undefined,
         );
-        console.log('consensusErrorResponse', consensusErrorResponse)
+        console.log("consensusErrorResponse", consensusErrorResponse);
         if (consensusErrorResponse === null) {
           reject({ error: "Not enough consensus" });
         } else {
@@ -225,7 +230,7 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
  * @param {Uint8Array} uint8arr - The Uint8Array to convert.
  * @returns {string} - The hexadecimal string representation of the Uint8Array.
  */
-export const byteToHexString = (uint8arr)  => {
+export const byteToHexString = (uint8arr) => {
   if (!uint8arr) {
     return "";
   }
@@ -239,7 +244,7 @@ export const byteToHexString = (uint8arr)  => {
     hexStr += hex;
   }
   return hexStr;
-}
+};
 
 /**
  * Converts a hexadecimal string to a Uint8Array.
@@ -256,7 +261,7 @@ export const hexStringToByte = (str) => {
     a.push(parseInt(str.substr(i, 2), 16));
   }
   return new Uint8Array(a);
-}
+};
 
 /**
  * Shuffles the elements in an array using the Fisher-Yates algorithm.
@@ -281,7 +286,7 @@ export const shuffleArray = (array) => {
   }
 
   return array;
-}
+};
 
 /**
  * Pauses the execution for a specified number of milliseconds.
@@ -291,7 +296,7 @@ export const shuffleArray = (array) => {
  */
 export const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
+};
 
 /**
  * Converts a string to its hexadecimal representation.
@@ -305,7 +310,7 @@ export const toHex = (str) => {
     result += str.charCodeAt(i).toString(16);
   }
   return result;
-}
+};
 
 /**
  * Computes the data ID for a specific storage part.
@@ -318,7 +323,7 @@ export const toHex = (str) => {
  */
 export const computeStoragePartDataId = (allocationId, path, fileName, partNum) => {
   return sha3.sha3_256(allocationId + ":" + path + ":" + fileName + ":" + partNum);
-}
+};
 
 /**
  * Parses an authTicket (authTicket) and returns the parsed data.
@@ -330,7 +335,7 @@ export const parseAuthTicket = (authTicket) => {
   var buff = new Buffer(authTicket, "base64");
   var data = buff.toString("ascii");
   return JSON.parse(data);
-}
+};
 
 /**
  * Parses wallet information from an AE (AccountEntity) object and returns the parsed data.
@@ -353,7 +358,7 @@ export const parseWalletInfo = (ae) => {
     version: "1.0",
     date_created: moment.unix(ae.timeStamp).format("YYYY-MM-DD HH:mm:ss"),
   };
-}
+};
 
 /**
  * Makes a POST request to the specified URL with the given data.
@@ -377,7 +382,7 @@ export const postReq = (url, data, option) => {
       return parseJson(responseData);
     },
   });
-}
+};
 
 /**
  * Makes a PUT request to the specified URL with the given data.
@@ -395,7 +400,7 @@ export const putReq = (url, data) => {
       return parseJson(responseData);
     },
   });
-}
+};
 
 /**
  * Makes a DELETE request to the specified URL with the given data.
@@ -410,7 +415,7 @@ export const delReq = (url, data) => {
     url: url,
     data: data,
   });
-}
+};
 
 /**
  * Recovers a wallet from the cloud using the specified URL, App ID Token, and App Phone Number.
@@ -429,7 +434,7 @@ export const recoverWalletFromCloud = (url, AppIDToken, AppPhoneNumber) => {
       "X-App-Phone-Number": AppPhoneNumber,
     },
   });
-}
+};
 
 /**
  * Retrieves share information from the specified URL using the provided client signature, client ID, and client key.
@@ -451,7 +456,7 @@ export const getShareInfo = (url, clientSignature, clientId, clientkey) => {
       "X-App-Timestamp": new Date().getTime(),
     },
   });
-}
+};
 
 /**
  * Retrieves referrals information from the specified URL.
@@ -467,7 +472,7 @@ export const getReferrals = (url) => {
       "X-App-Timestamp": new Date().getTime(),
     },
   });
-}
+};
 
 /**
  * Makes a POST request to 0box using the specified URL, data, client ID, public key, client signature, and ID token.
@@ -499,7 +504,7 @@ export const postMethodTo0box = (url, data, clientId, publicKey, clientSignature
     headers: headers,
     data: data,
   });
-}
+};
 
 /**
  * Makes a DELETE request to 0box using the specified URL, data, client ID, public key, client signature, and ID token.
@@ -533,7 +538,7 @@ export const deleteMethodTo0box = (url, data, clientId, publicKey, clientSignatu
   });
 
   return result;
-}
+};
 
 /**
  * Makes a POST request to a blobber using the specified URL, data, parameters, client ID, public key, and signature.
@@ -571,7 +576,7 @@ export const postReqToBlobber = (url, data, params, clientId, publicKey, signatu
     .catch((error) => {
       return error;
     });
-}
+};
 
 /**
  * Makes a GET request to retrieve blobbers using the specified URL, parameters, and client ID.
@@ -591,7 +596,7 @@ export const getReqBlobbers = (url, params, clientId) => {
       return parseJson(data);
     },
   });
-}
+};
 
 /**
  * Makes a GET request to the specified URL with the provided parameters.
@@ -605,11 +610,11 @@ export const getReq = (url, params) => {
   return axios.get(url, {
     params: params,
     transformResponse: function (data) {
-      console.log('getReq transformResponse', data)
+      console.log("getReq transformResponse", data);
       return parseJson(data);
     },
   });
-}
+};
 
 /**
  * Makes a GET request to the specified URL with the provided parameters for downloading a file.
@@ -622,7 +627,7 @@ export const getDownloadReq = (url, params) => {
   return axios.get(url, {
     params: params,
   });
-}
+};
 
 /**
  * Makes a plain GET request to the specified URL.
@@ -635,7 +640,7 @@ export const plainGet = (url) => {
     method: "get",
     url: url,
   });
-}
+};
 
 /**
  * Makes a GET request to the specified URL with the provided parameters to a miner.
@@ -644,7 +649,7 @@ export const plainGet = (url) => {
  * @param {object} params - The parameters for the GET request.
  * @returns {Promise} - A Promise representing the GET request to a miner.
  */
-export const getReqFromMiner = async(url, params) => {
+export const getReqFromMiner = async (url, params) => {
   try {
     return await axios.get(url, {
       params: params,
@@ -652,7 +657,7 @@ export const getReqFromMiner = async(url, params) => {
   } catch (err) {
     return err;
   }
-},
+};
 
 /**
  * Parses a JSON string using JSONbig library, which handles large numbers.
@@ -662,7 +667,7 @@ export const getReqFromMiner = async(url, params) => {
  */
 export const parseJson = (jsonString) => {
   return JSONbig.parse(jsonString);
-}
+};
 
 /**
  * Performs parallel POST requests to all miners and returns the result from the first successful request.
@@ -685,7 +690,7 @@ export const doParallelPostReqToAllMiners = (miners, url, postData) => {
         reject({ error: err[0].code });
       });
   });
-}
+};
 
 /**
  * Reads the content of a file as a Uint8Array.
@@ -693,14 +698,14 @@ export const doParallelPostReqToAllMiners = (miners, url, postData) => {
  * @param {File} file - The file object to read.
  * @returns {Promise<Uint8Array>} - A promise that resolves with the file content as a Uint8Array.
  */
-export const readBytes = (file) => 
+export const readBytes = (file) =>
   new Promise((resolve) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       resolve(new Uint8Array(reader.result));
     };
     reader.readAsArrayBuffer(file);
-  })
+  });
 
 /**
  * Performs a GET request to a random miner URL from the given list of miners.
@@ -727,7 +732,7 @@ export const doGetReqToRandomMiner = async (miners, url, getData) => {
       reject(err);
     }
   });
-}
+};
 
 /**
  * Retrieves the balance of a client from the sharders by making a consensus-based request.
@@ -735,9 +740,10 @@ export const doGetReqToRandomMiner = async (miners, url, getData) => {
  * @param {string} clientId - The ID of the client.
  * @returns {Promise} - A promise that resolves with the balance information or rejects with an error.
  */
-export const getBalanceUtil = async (clientId) => {
+export const getBalanceUtil = async (clientId, domain) => {
+  const { data: minersAndSharders } = await getMinersAndShardersUtils(domain);
   return new Promise((resolve, reject) => {
-    getConsensusedInformationFromSharders(configJson.sharders, Endpoints.GET_BALANCE, {
+    getConsensusedInformationFromSharders(minersAndSharders.sharders, Endpoints.GET_BALANCE, {
       client_id: clientId,
     })
       .then((res) => {
@@ -766,7 +772,7 @@ export const getTransactionResponse = (data) => {
   txn.hash = data.hash;
   txn.version = data.version;
   txn.client_id = data.client_id;
-  txn.to_client_id = (typeof data.to_client_id !== 'undefined') ? data.to_client_id : null;
+  txn.to_client_id = typeof data.to_client_id !== "undefined" ? data.to_client_id : null;
   txn.chain_id = data.chain_id;
   txn.transaction_data = data.transaction_data;
   txn.transaction_value = data.transaction_value;
@@ -774,8 +780,8 @@ export const getTransactionResponse = (data) => {
   txn.creation_date = data.creation_date;
   txn.transaction_type = data.transaction_type;
   txn.transaction_output = data.transaction_output;
-  txn.txn_output_hash = (typeof data.txn_output_hash !== 'undefined') ? data.txn_output_hash : null;
-}
+  txn.txn_output_hash = typeof data.txn_output_hash !== "undefined" ? data.txn_output_hash : null;
+};
 
 /**
  * Submits a transaction to the network.
@@ -787,23 +793,23 @@ export const getTransactionResponse = (data) => {
  * @param {string} transactionType - The type of transaction.
  * @returns {Promise} - A promise that resolves with the transaction hash if the transaction is successful.
  */
-export const submitTransaction = async (ae, toClientId, val, note, transactionType) => {
+export const submitTransaction = async (ae, toClientId, val, note, transactionType, domain) => {
   const hashPayload = sha3.sha3_256(note);
   const ts = Math.floor(new Date().getTime() / 1000);
 
   if (cachedNonce === undefined) {
-      //initialize by 0 if there is no nonce from getBalance as well
-      try {
-          const { nonce } = await getBalanceUtil(ae.id)
-          cachedNonce = nonce ?? 0   
-      }
-      catch (err) {
-          cachedNonce = 0  
-      }
+    //initialize by 0 if there is no nonce from getBalance as well
+    try {
+      const { nonce } = await getBalanceUtil(ae.id, domain);
+      cachedNonce = nonce ?? 0;
+    } catch (err) {
+      cachedNonce = 0;
+    }
   }
 
-  const nonceToUse = cachedNonce+1
-  const hashdata = ts + ":" + nonceToUse + ":" + ae.id + ":" + toClientId + ":" + val + ":" + hashPayload;
+  const nonceToUse = cachedNonce + 1;
+  const hashdata =
+    ts + ":" + nonceToUse + ":" + ae.id + ":" + toClientId + ":" + val + ":" + hashPayload;
   const hash = sha3.sha3_256(hashdata);
   const bytehash = hexStringToByte(hash);
   const sec = new bls.SecretKey();
@@ -819,21 +825,37 @@ export const submitTransaction = async (ae, toClientId, val, note, transactionTy
   data.creation_date = ts;
   data.to_client_id = toClientId;
   data.hash = hash;
-  data.transaction_fee = 0;
+  data.transaction_fee = 1000000;
   data.signature = sig.serializeToHexStr();
-  data.version = '1.0';
+  data.version = "1.0";
   data.txn_output_hash = "";
   data.public_key = ae.public_key;
 
-  return new Promise(function (resolve, reject) {
-    doParallelPostReqToAllMiners(configJson.miners, Endpoints.PUT_TRANSACTION, data)
-        .then((response) => {
-            cachedNonce +=1
+  return new Promise(async function (resolve, reject) {
+    const { data: minersAndSharders } = await getMinersAndShardersUtils(domain);
+    doParallelPostReqToAllMiners(minersAndSharders.miners, Endpoints.PUT_TRANSACTION, data)
+      .then((response) => {
+        cachedNonce += 1;
 
-            resolve(getTransactionResponse(response.entity));
-        })
-        .catch((error) => {
-            reject(error);
-        })
+        resolve(getTransactionResponse(response.entity));
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
-}
+};
+
+/**
+ * Retrieves the list of miners and sharders.
+ * @param {string} domain - The domain of the network.
+ * @returns {Promise<any>} - A Promise that resolves to the list of miners and sharders.
+ */
+export const getMinersAndShardersUtils = async (domain) => {
+  if (!domain) return { error: "domain is required" };
+  const { error, data } = await basicReqWithDispatch({
+    url: domain.startsWith("http") ? `${domain}/network` : `https://${domain}/dns/network`,
+    options: { method: "GET" },
+  });
+
+  return { error, data };
+};
