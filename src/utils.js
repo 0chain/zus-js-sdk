@@ -737,7 +737,7 @@ export const doGetReqToRandomMiner = async (miners, url, getData) => {
  * @returns {Promise} - A promise that resolves with the balance information or rejects with an error.
  */
 export const getBalanceUtil = async (clientId, domain) => {
-  const {data: minersAndSharders } = await getMinersAndSharders(domain);
+  const {data: minersAndSharders } = await getMinersAndShardersUtils(domain);
   return new Promise((resolve, reject) => {
     getConsensusedInformationFromSharders(minersAndSharders.sharders, Endpoints.GET_BALANCE, {
       client_id: clientId,
@@ -828,7 +828,8 @@ export const submitTransaction = async (ae, toClientId, val, note, transactionTy
   data.public_key = ae.public_key;
 
   return new Promise(function (resolve, reject) {
-    doParallelPostReqToAllMiners(network, Endpoints.PUT_TRANSACTION, data)
+    const {data: minersAndSharders } = await getMinersAndShardersUtils(domain);
+    doParallelPostReqToAllMiners(minersAndSharders.miners, Endpoints.PUT_TRANSACTION, data)
         .then((response) => {
             cachedNonce +=1
 
