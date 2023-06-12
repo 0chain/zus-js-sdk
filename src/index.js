@@ -1,4 +1,10 @@
-import { getBalanceUtil, submitTransaction, Endpoints, getReqBlobbers } from "./utils";
+import {
+  getBalanceUtil,
+  submitTransaction,
+  Endpoints,
+  getReqBlobbers,
+  getMinersAndShardersUtils,
+} from "./utils";
 import { createWasm } from "./zcn";
 import * as bip39 from "bip39";
 import { sha3_256 } from "js-sha3";
@@ -18,6 +24,8 @@ const TransactionType = {
   SMART_CONTRACT: 1000, // A smart contract transaction type
 };
 
+let domain = "";
+
 /**
  * Initializes the SDK with the provided configuration.
  *
@@ -25,7 +33,10 @@ const TransactionType = {
  * @returns {Promise<void>} - A Promise that resolves when the SDK is initialized.
  */
 export const init = async (config) => {
+  if (!config.length) throw new Error("Missing configuration parameters");
+
   console.log("config", config);
+  domain = config[1]?.replace("https://", "")?.replace("http://", "")?.replace("/dns", "");
 
   const wasm = await createWasm();
   console.log("wasm", wasm);
@@ -51,8 +62,8 @@ export const init = async (config) => {
  * @param {string} clientId - The client ID for which to retrieve the balance.
  * @returns {Promise<number>} - A Promise that resolves to the balance of the client identified by the clientId parameter.
  */
-export const getBalance = async (clientId, network) => {
-  return getBalanceUtil(clientId, network);
+export const getBalance = async (clientId) => {
+  return getBalanceUtil(clientId, domain);
 };
 
 /**
@@ -64,9 +75,9 @@ export const getBalance = async (clientId, network) => {
  * @param {string} note - An optional note to be included with the transaction.
  * @returns {Promise<any>} - A Promise that resolves to the result of submitting the transaction.
  */
-export const sendTransaction = async (ae, toClientId, val, note, network) => {
+export const sendTransaction = async (ae, toClientId, val, note) => {
   console.log("sendTransaction from:", ae, "to:", toClientId, "value:", val, "note:", note);
-  return submitTransaction(ae, toClientId, val, note, TransactionType.SEND, network);
+  return submitTransaction(ae, toClientId, val, note, TransactionType.SEND, domain);
 };
 
 /**
@@ -970,4 +981,12 @@ export const listSharedFiles = async (lookupHash, allocationId, walletId) => {
 export const multiUpload = async (jsonBulkUploadOptions) => {
   const res = await goWasm.sdk.multiUpload(jsonBulkUploadOptions);
   return res;
+};
+
+/**
+ * Retrieves the list of miners and sharders.
+ * @returns {Promise<any>} - A Promise that resolves to the list of miners and sharders.
+ */
+export const getMinersAndSharders = async () => {
+  return await getMinersAndShardersUtils(domain);
 };

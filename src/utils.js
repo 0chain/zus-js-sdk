@@ -1,3 +1,5 @@
+import { basicReqWithDispatch } from "./requests";
+
 /*
  * This file is part of the 0chain @zerochain/0chain distribution (https://github.com/0chain/client-sdk).
  * Copyright (c) 2018 0chain LLC.
@@ -15,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-  /* tslint:disable:no-console */
 var sha3 = require("js-sha3");
 var JSONbig = require("json-bigint");
 var axios = require("axios");
@@ -735,9 +736,10 @@ export const doGetReqToRandomMiner = async (miners, url, getData) => {
  * @param {string} clientId - The ID of the client.
  * @returns {Promise} - A promise that resolves with the balance information or rejects with an error.
  */
-export const getBalanceUtil = async (clientId, network) => {
+export const getBalanceUtil = async (clientId, domain) => {
+  const {data: minersAndSharders } = await getMinersAndSharders(domain);
   return new Promise((resolve, reject) => {
-    getConsensusedInformationFromSharders(network, Endpoints.GET_BALANCE, {
+    getConsensusedInformationFromSharders(minersAndSharders.sharders, Endpoints.GET_BALANCE, {
       client_id: clientId,
     })
       .then((res) => {
@@ -787,14 +789,14 @@ export const getTransactionResponse = (data) => {
  * @param {string} transactionType - The type of transaction.
  * @returns {Promise} - A promise that resolves with the transaction hash if the transaction is successful.
  */
-export const submitTransaction = async (ae, toClientId, val, note, transactionType, network) => {
+export const submitTransaction = async (ae, toClientId, val, note, transactionType, domain) => {
   const hashPayload = sha3.sha3_256(note);
   const ts = Math.floor(new Date().getTime() / 1000);
 
   if (cachedNonce === undefined) {
       //initialize by 0 if there is no nonce from getBalance as well
       try {
-          const { nonce } = await getBalanceUtil(ae.id, network)
+          const { nonce } = await getBalanceUtil(ae.id, domain)
           cachedNonce = nonce ?? 0   
       }
       catch (err) {
@@ -837,3 +839,19 @@ export const submitTransaction = async (ae, toClientId, val, note, transactionTy
         })
   });
 }
+
+/**
+ * Retrieves the list of miners and sharders.
+ * @param {string} domain - The domain of the network.
+ * @returns {Promise<any>} - A Promise that resolves to the list of miners and sharders.
+ */
+export const getMinersAndShardersUtils = async (domain) => {
+  if (!domain) return { error: "domain is required" };
+  const { error, data } = await basicReqWithDispatch({
+    url: domain.startsWith("http") ? `${domain}/network` : `https://${domain}/dns/network`,
+    options: { method: "GET" },
+  });
+
+
+  return { error, data };
+};
