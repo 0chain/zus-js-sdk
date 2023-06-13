@@ -318,6 +318,7 @@ export const download = async (
   downloadThumbnailOnly,
   numBlocks,
   callbackFuncName,
+  isFinal,
 ) => {
   console.log("download allocationID", allocationID, "remotePath", remotePath);
   const file = await goWasm.sdk.download(
@@ -328,6 +329,7 @@ export const download = async (
     downloadThumbnailOnly,
     numBlocks,
     callbackFuncName,
+    isFinal,
   );
   return file;
 };
