@@ -990,3 +990,22 @@ export const multiUpload = async (jsonBulkUploadOptions) => {
 export const getMinersAndSharders = async () => {
   return await getMinersAndShardersUtils(domain);
 };
+
+
+/**
+ * Download files from an allocation using authTicket.
+ *
+ * @param {string} allocId - ID of the allocation to download from
+ * @param {array} files - the list of files to download
+ * @param {string} authTicket - authTicket of the directory to download from
+ * @param {string} callbackFuncName - name of the function to call after download is done
+ * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
+ */
+export const multiDownload = async (allocId, files, authTicket, callbackFuncName) => {
+  return goWasm.sdk.multiDownload(
+    allocId,
+    files,
+    authTicket,
+    callbackFuncName
+  )
+}
