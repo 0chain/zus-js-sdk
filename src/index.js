@@ -993,7 +993,7 @@ export const getMinersAndSharders = async () => {
 
 
 /**
- * Retrieves the list of files inside a shared directory using lookup_hash.
+ * Download files from an allocation using authTicket.
  *
  * @param {string} allocId - ID of the allocation to download from
  * @param {array} files - the list of files to download
