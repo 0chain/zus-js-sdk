@@ -308,6 +308,7 @@ export const bulkUpload = async (objects) => {
  * @param {boolean} downloadThumbnailOnly - Flag indicating if only the thumbnail of the file should be downloaded.
  * @param {number} numBlocks - The number of blocks to download.
  * @param {string} callbackFuncName - The name of the callback function to handle progress updates.
+ * @param {boolean} isFinal - Flag indicating if this is the final download request.
  * @returns {Promise<any>} - A Promise that resolves to the downloaded file.
  */
 export const download = async (
@@ -318,6 +319,7 @@ export const download = async (
   downloadThumbnailOnly,
   numBlocks,
   callbackFuncName,
+  isFinal = true,
 ) => {
   console.log("download allocationID", allocationID, "remotePath", remotePath);
   const file = await goWasm.sdk.download(
@@ -328,6 +330,7 @@ export const download = async (
     downloadThumbnailOnly,
     numBlocks,
     callbackFuncName,
+    isFinal,
   );
   return file;
 };
@@ -991,7 +994,6 @@ export const getMinersAndSharders = async () => {
   return await getMinersAndShardersUtils(domain);
 };
 
-
 /**
  * Download files from an allocation using authTicket.
  *
@@ -1002,10 +1004,5 @@ export const getMinersAndSharders = async () => {
  * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
  */
 export const multiDownload = async (allocId, files, authTicket, callbackFuncName) => {
-  return goWasm.sdk.multiDownload(
-    allocId,
-    files,
-    authTicket,
-    callbackFuncName
-  )
-}
+  return goWasm.sdk.multiDownload(allocId, files, authTicket, callbackFuncName);
+};
