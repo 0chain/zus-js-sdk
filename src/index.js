@@ -995,12 +995,12 @@ export const getMinersAndSharders = async () => {
 };
 
 /**
- * Download files from an allocation using authTicket.
+ * Download files from an allocation.
  *
- * @param {string} allocId - ID of the allocation to download from
- * @param {array} files - the list of files to download
- * @param {string} authTicket - authTicket of the directory to download from
- * @param {string} callbackFuncName - name of the function to call after download is done
+ * @param {string} allocId - ID of the allocation to download from.
+ * @param {string} files - JSON string of the files to download.
+ * @param {string} authTicket - AuthTicket of the directory to download from.
+ * @param {string} callbackFuncName - Name of the callback function to call when a file is downloaded.
  * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
  */
 export const multiDownload = async (allocId, files, authTicket, callbackFuncName) => {
