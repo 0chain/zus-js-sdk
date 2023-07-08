@@ -1006,3 +1006,14 @@ export const getMinersAndSharders = async () => {
 export const multiDownload = async (allocId, files, authTicket, callbackFuncName) => {
   return goWasm.sdk.multiDownload(allocId, files, authTicket, callbackFuncName);
 };
+
+/**
+ * Multi Operation - do copy, move, delete and createdir operation concurrently.
+ *
+ * @param {string} allocId - ID of the allocation to download from.
+ * @param {string} jsonMultiOperationOptions - Json Array of MultiOperationOption. eg: "[{"operationType":"move","remotePath":"/README.md","destPath":"/folder1/"},{"operationType":"delete","remotePath":"/t3.txt"}]"
+ * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
+ */
+export const multiOperation = async (allocId, jsonMultiOperationOptions) => {
+  return goWasm.sdk.multiOperation(allocId, jsonMultiOperationOptions);
+};
