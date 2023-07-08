@@ -25,6 +25,8 @@ const TransactionType = {
 };
 
 let domain = "";
+let shouldShowLogs = false;
+const log = (...args) => shouldShowLogs && console.log(...args);
 
 /**
  * Initializes the SDK with the provided configuration.
@@ -35,20 +37,20 @@ let domain = "";
 export const init = async (config) => {
   if (!config.length) throw new Error("Missing configuration parameters");
 
-  console.log("config", config);
+  log("config", config);
   domain = config[1]?.replace("https://", "")?.replace("http://", "")?.replace("/dns", "");
 
   const wasm = await createWasm();
-  console.log("wasm", wasm);
+  log("wasm", wasm);
 
-  await wasm.sdk.showLogs();
+  if (shouldShowLogs) await wasm.sdk.showLogs();
 
-  console.log(...config);
+  log(...config);
   await wasm.sdk.init(...config);
 
-  console.log("window.bls", window.bls);
+  log("window.bls", window.bls);
   bls = window.bls;
-  console.log("bls", bls);
+  log("bls", bls);
   await bls.init(bls.BN254);
 
   goWasm = wasm;
@@ -76,7 +78,7 @@ export const getBalance = async (clientId) => {
  * @returns {Promise<any>} - A Promise that resolves to the result of submitting the transaction.
  */
 export const sendTransaction = async (ae, toClientId, val, note) => {
-  console.log("sendTransaction from:", ae, "to:", toClientId, "value:", val, "note:", note);
+  log("sendTransaction from:", ae, "to:", toClientId, "value:", val, "note:", note);
   return submitTransaction(ae, toClientId, val, note, TransactionType.SEND, domain);
 };
 
@@ -101,9 +103,9 @@ export const getBalanceWasm = async (clientId) => {
  * @returns {Promise<void>} - A Promise that resolves when the wallet information has been successfully set.
  */
 export const setWallet = async (clientID, privateKey, publicKey, mnemonic) => {
-  console.log("START setWallet", { clientID, privateKey, publicKey, mnemonic });
+  log("START setWallet", { clientID, privateKey, publicKey, mnemonic });
   await goWasm.setWallet(bls, clientID, privateKey, publicKey, mnemonic);
-  console.log("END setWallet", { clientID, privateKey, publicKey, mnemonic });
+  log("END setWallet", { clientID, privateKey, publicKey, mnemonic });
 };
 
 /**
@@ -132,7 +134,7 @@ export const listAllocations = async () => {
  * @returns {Promise<void>} - A Promise that resolves when the allocation has been created.
  */
 export const createAllocation = async (allocationConfig) => {
-  console.log("allocationConfig", allocationConfig);
+  log("allocationConfig", allocationConfig);
   return await goWasm.sdk.createAllocation(
     allocationConfig.datashards,
     allocationConfig.parityshards,
@@ -164,7 +166,7 @@ export const createAllocation = async (allocationConfig) => {
  * @returns {Promise<any>} - A Promise that resolves to the result of creating the allocation.
  */
 export const createAllocationWithBlobbers = async (allocationConfig) => {
-  console.log("createAllocationWithBlobbers allocationConfig", allocationConfig);
+  log("createAllocationWithBlobbers allocationConfig", allocationConfig);
   const txn = await goWasm.sdk.createAllocation(
     allocationConfig.datashards,
     allocationConfig.parityshards,
@@ -198,7 +200,7 @@ export const getAllocation = async (allocationId) => {
  * @returns {Promise<object>} - A Promise that resolves to an object containing information about the allocation.
  */
 export const getAllocationFromAuthTicket = async (authTicket) => {
-  console.log("getAllocationFromAuthTicket", authTicket);
+  log("getAllocationFromAuthTicket", authTicket);
   const allocation = await goWasm.sdk.getAllocationWith(authTicket);
   return allocation;
 };
@@ -210,7 +212,7 @@ export const getAllocationFromAuthTicket = async (authTicket) => {
  * @returns {Promise<object>} - A Promise that resolves to an object containing the reloaded information about the allocation.
  */
 export const reloadAllocation = async (allocationId) => {
-  console.log("reloadAllocation");
+  log("reloadAllocation");
   const allocation = await goWasm.sdk.reloadAllocation(allocationId);
   return allocation;
 };
@@ -222,7 +224,7 @@ export const reloadAllocation = async (allocationId) => {
  * @returns {Promise<string>} - A Promise that resolves to a string representing the hash of the frozen allocation.
  */
 export const freezeAllocation = async (allocationId) => {
-  console.log("freezeAllocation");
+  log("freezeAllocation");
   const hash = await goWasm.sdk.freezeAllocation(allocationId);
   return hash;
 };
@@ -234,7 +236,7 @@ export const freezeAllocation = async (allocationId) => {
  * @returns {Promise<string>} - A Promise that resolves to a string representing the hash of the cancelled allocation.
  */
 export const cancelAllocation = async (allocationId) => {
-  console.log("cancelAllocation");
+  log("cancelAllocation");
   const hash = await goWasm.sdk.cancelAllocation(allocationId);
   return hash;
 };
@@ -262,7 +264,7 @@ export const updateAllocation = async (
   addBlobberId,
   removeBlobberId,
 ) => {
-  console.log("updateAllocation", {
+  log("updateAllocation", {
     allocationId,
     size,
     expiry,
@@ -280,7 +282,7 @@ export const updateAllocation = async (
     addBlobberId,
     removeBlobberId,
   );
-  console.log("hash", hash);
+  log("hash", hash);
   return hash;
 };
 
@@ -291,7 +293,7 @@ export const updateAllocation = async (
  * @returns {Promise<Array>} - A Promise that resolves to an array containing the results of the bulk upload.
  */
 export const bulkUpload = async (objects) => {
-  console.log("bulkUpload objects", objects);
+  log("bulkUpload objects", objects);
   const results = await goWasm.bulkUpload(objects);
   return results;
 };
@@ -321,7 +323,7 @@ export const download = async (
   callbackFuncName,
   isFinal = true,
 ) => {
-  console.log("download allocationID", allocationID, "remotePath", remotePath);
+  log("download allocationID", allocationID, "remotePath", remotePath);
   const file = await goWasm.sdk.download(
     allocationID,
     remotePath,
@@ -341,10 +343,10 @@ export const download = async (
  * @returns {Promise<void>} - A Promise that resolves when the faucet token has been obtained.
  */
 export const getFaucetToken = async (amount = 1) => {
-  console.log("faucet before");
+  log("faucet before");
   const amountFloat64 = parseFloat(amount);
   await goWasm.sdk.faucet("pour", JSON.stringify("{Pay day}"), amountFloat64);
-  console.log("faucet after");
+  log("faucet after");
 };
 
 /**
@@ -357,9 +359,9 @@ export const getFaucetToken = async (amount = 1) => {
  * @returns {Promise<void>} - A Promise that resolves when the smart contract method execution is complete.
  */
 export const executeSmartContract = async (address, methodName, input, value) => {
-  console.log("executeSmartContract before", address, methodName, input, value);
+  log("executeSmartContract before", address, methodName, input, value);
   await goWasm.sdk.executeSmartContract(address, methodName, input, value);
-  console.log("executeSmartContract after");
+  log("executeSmartContract after");
 };
 
 /**
@@ -370,7 +372,7 @@ export const executeSmartContract = async (address, methodName, input, value) =>
  * @returns {Promise<Array>} - A Promise that resolves to an array containing the list of objects.
  */
 export const listObjects = async (allocationId, path) => {
-  console.log("listObjects", allocationId, path);
+  log("listObjects", allocationId, path);
   const { list = [] } = await goWasm.sdk.listObjects(allocationId, path);
   return list;
 };
@@ -398,7 +400,7 @@ export const share = async (
   revoke,
   availableAfter,
 ) => {
-  console.log("share allocationId", allocationId, "filePath", filePath);
+  log("share allocationId", allocationId, "filePath", filePath);
 
   const authTicket = await goWasm.sdk.share(
     allocationId,
@@ -410,7 +412,7 @@ export const share = async (
     availableAfter,
   );
 
-  console.log("authTicket after share", authTicket);
+  log("authTicket after share", authTicket);
   return authTicket;
 };
 
@@ -420,7 +422,8 @@ export const share = async (
  * @returns {Promise<void>} - A Promise that resolves when the logs are shown.
  */
 export const showLogs = async () => {
-  console.log("showLogs");
+  shouldShowLogs = true;
+  log("showLogs");
   await goWasm.sdk.showLogs();
 };
 
@@ -430,7 +433,8 @@ export const showLogs = async () => {
  * @returns {Promise<void>} - A Promise that resolves when the logs are hidden.
  */
 export const hideLogs = async () => {
-  console.log("hideLogs");
+  shouldShowLogs = false;
+  log("hideLogs");
   await goWasm.sdk.hideLogs();
 };
 
@@ -442,7 +446,7 @@ export const hideLogs = async () => {
  * @returns {Promise<void>} - A Promise that resolves when the object is successfully deleted.
  */
 export const deleteObject = async (allocationId, path) => {
-  console.log("deleteObject");
+  log("deleteObject");
   await goWasm.sdk.delete(allocationId, path);
 };
 
@@ -455,7 +459,7 @@ export const deleteObject = async (allocationId, path) => {
  * @returns {Promise<void>} - A Promise that resolves when the object is successfully renamed.
  */
 export const renameObject = async (allocationId, path, newName) => {
-  console.log("renameObject");
+  log("renameObject");
   await goWasm.sdk.rename(allocationId, path, newName);
 };
 
@@ -468,7 +472,7 @@ export const renameObject = async (allocationId, path, newName) => {
  * @returns {Promise<void>} - A Promise that resolves when the object is successfully copied.
  */
 export const copyObject = async (allocationId, path, destination) => {
-  console.log("copyObject");
+  log("copyObject");
   await goWasm.sdk.copy(allocationId, path, destination);
 };
 
@@ -481,7 +485,7 @@ export const copyObject = async (allocationId, path, destination) => {
  * @returns {Promise<void>} - A Promise that resolves when the object is successfully moved.
  */
 export const moveObject = async (allocationId, path, destination) => {
-  console.log("moveObject");
+  log("moveObject");
   await goWasm.sdk.move(allocationId, path, destination);
 };
 
@@ -496,7 +500,7 @@ export const moveObject = async (allocationId, path, destination) => {
  * @returns {Promise<void>} - A Promise that resolves when the playback starts.
  */
 export const play = async (allocationId, remotePath, authTicket, lookupHash, isLive) => {
-  console.log("play");
+  log("play");
   await goWasm.sdk.play(allocationId, remotePath, authTicket, lookupHash, isLive);
 };
 
@@ -506,7 +510,7 @@ export const play = async (allocationId, remotePath, authTicket, lookupHash, isL
  * @returns {Promise<void>} - A Promise that resolves when the SDK has stopped.
  */
 export const stop = async () => {
-  console.log("stop");
+  log("stop");
   await goWasm.sdk.stop();
 };
 
@@ -516,9 +520,9 @@ export const stop = async () => {
  * @returns {Promise<ArrayBuffer>} - A Promise that resolves to the next segment of data as an ArrayBuffer.
  */
 export const getNextSegment = async () => {
-  console.log("getNextSegment");
+  log("getNextSegment");
   const buf = await goWasm.sdk.getNextSegment();
-  console.log("buf", buf);
+  log("buf", buf);
   return buf;
 };
 
@@ -530,7 +534,7 @@ export const getNextSegment = async () => {
  * @returns {Promise<void>} - A Promise that resolves when the directory is created successfully.
  */
 export const createDir = async (allocationId, path) => {
-  console.log("createDir", path);
+  log("createDir", path);
   await goWasm.sdk.createDir(allocationId, path);
 };
 
@@ -542,9 +546,9 @@ export const createDir = async (allocationId, path) => {
  * @returns {Promise<object>} - A Promise that resolves to the statistics of the file.
  */
 export const getFileStats = async (allocationId, path) => {
-  console.log("getFileStats", path);
+  log("getFileStats", path);
   const fileStats = await goWasm.sdk.getFileStats(allocationId, path);
-  console.log("fileStats", fileStats);
+  log("fileStats", fileStats);
   return fileStats;
 };
 
@@ -573,7 +577,7 @@ export const downloadBlocks = async (
   endBlockNumber,
   callbackFuncName,
 ) => {
-  console.log("downloadBlocks allocationID", allocationID, "remotePath", remotePath);
+  log("downloadBlocks allocationID", allocationID, "remotePath", remotePath);
   const output = await goWasm.sdk.downloadBlocks(
     allocationID,
     remotePath,
@@ -594,7 +598,7 @@ export const downloadBlocks = async (
  * @returns {Promise<number>} - A Promise that resolves to the USD rate for the specified symbol.
  */
 export const getUSDRate = async (symbol) => {
-  console.log("getUSDRate", symbol);
+  log("getUSDRate", symbol);
   const usdRate = await goWasm.sdk.getUSDRate(symbol);
   return usdRate;
 };
@@ -606,7 +610,7 @@ export const getUSDRate = async (symbol) => {
  * @returns {Promise<boolean>} - A Promise that resolves to a boolean value indicating if the client ID is a valid wallet ID.
  */
 export const isWalletID = async (clientID) => {
-  console.log("isWalletID", clientID);
+  log("isWalletID", clientID);
   const result = await goWasm.sdk.isWalletID(clientID);
   return result;
 };
@@ -618,7 +622,7 @@ export const isWalletID = async (clientID) => {
  * @returns {Promise<string>} - A Promise that resolves to the public encryption key.
  */
 export const getPublicEncryptionKey = async (mnemonic) => {
-  console.log("getPublicEncryptionKey", mnemonic);
+  log("getPublicEncryptionKey", mnemonic);
   const publicKey = await goWasm.sdk.getPublicEncryptionKey(mnemonic);
   return publicKey;
 };
@@ -631,7 +635,7 @@ export const getPublicEncryptionKey = async (mnemonic) => {
  * @returns {Promise<string>} - A Promise that resolves to the lookup hash of the file or directory.
  */
 export const getLookupHash = async (allocationId, path) => {
-  console.log("getLookupHash", allocationId, path);
+  log("getLookupHash", allocationId, path);
   const hash = await goWasm.sdk.getLookupHash(allocationId, path);
   return hash;
 };
@@ -663,7 +667,7 @@ export const getAllocationBlobbers = async (
   minWritePrice,
   maxWritePrice,
 ) => {
-  console.log("getAllocationBlobbers", referredBlobberURLs);
+  log("getAllocationBlobbers", referredBlobberURLs);
   const blobberList = await goWasm.sdk.getAllocationBlobbers(
     referredBlobberURLs,
     dataShards,
@@ -687,7 +691,7 @@ export const getAllocationBlobbers = async (
  * @returns {Promise<Array>} - A Promise that resolves to an array containing the IDs of the blobbers.
  */
 export const getBlobberIds = async (blobberUrls) => {
-  console.log("getBlobberIds", blobberUrls);
+  log("getBlobberIds", blobberUrls);
   const blobberIds = await goWasm.sdk.getBlobberIds(blobberUrls);
   return blobberIds;
 };
@@ -698,7 +702,7 @@ export const getBlobberIds = async (blobberUrls) => {
  * @returns {Promise<Array>} - A Promise that resolves to an array containing the list of blobbers.
  */
 export const getBlobbers = async () => {
-  console.log("getBlobbers");
+  log("getBlobbers");
   const blobberList = await goWasm.sdk.getBlobbers();
   return blobberList;
 };
@@ -709,7 +713,7 @@ export const getBlobbers = async () => {
  * @returns {Promise<object>} - A Promise that resolves to the result of creating the read pool.
  */
 export const createReadPool = async () => {
-  console.log("createReadPool");
+  log("createReadPool");
   const result = await goWasm.sdk.createReadPool();
   return result;
 };
@@ -721,7 +725,7 @@ export const createReadPool = async () => {
  * @returns {Promise<object>} - A Promise that resolves to the read pool information.
  */
 export const getReadPoolInfo = async (clientID) => {
-  console.log("getReadPoolInfo", clientID);
+  log("getReadPoolInfo", clientID);
   const readPool = await goWasm.sdk.getReadPoolInfo(clientID);
   return readPool;
 };
@@ -737,7 +741,7 @@ export const getReadPoolInfo = async (clientID) => {
  * @returns {Promise<string>} - A Promise that resolves to the hash of the lock write pool transaction.
  */
 export const lockWritePool = async (allocationId, tokens, fee) => {
-  console.log("lockWritePool", allocationId, tokens, fee);
+  log("lockWritePool", allocationId, tokens, fee);
   const hash = await goWasm.sdk.lockWritePool(allocationId, tokens, fee);
   return hash;
 };
@@ -785,7 +789,7 @@ const hexStringToByte = (str) => {
 const createWalletKeys = async (userMnemonic) => {
   let mnemonic = userMnemonic;
   if (!userMnemonic) mnemonic = bip39.generateMnemonic(256);
-  console.log("mnemonic", mnemonic);
+  log("mnemonic", mnemonic);
 
   const seed = await bip39.mnemonicToSeed(mnemonic, "0chain-client-split-key");
   const buffer = new Uint8Array(seed);
@@ -813,13 +817,13 @@ const createWalletKeys = async (userMnemonic) => {
  * @returns {Promise<object>} - A Promise that resolves to the newly created wallet object.
  */
 export const createWallet = async () => {
-  console.log("before createWalletKeys");
+  log("before createWalletKeys");
   const { keys, mnemonic } = await createWalletKeys();
-  console.log("after createWalletKeys");
+  log("after createWalletKeys");
   const { publicKey, walletId } = keys;
-  console.log("createWallet", keys, mnemonic);
+  log("createWallet", keys, mnemonic);
   const pubEncKey = await goWasm.sdk.getPublicEncryptionKey(mnemonic);
-  console.log("pubEncKey", pubEncKey);
+  log("pubEncKey", pubEncKey);
   const wallet = {
     id: walletId,
     name: truncateAddress(publicKey),
@@ -838,7 +842,7 @@ export const createWallet = async () => {
  * @returns {Promise<object>} - A Promise that resolves to the recovered wallet object.
  */
 export const recoverWallet = async (mnemonic) => {
-  console.log("before createWalletKeys");
+  log("before createWalletKeys");
   const { keys } = await createWalletKeys(mnemonic);
 
   const clientId = keys.walletId;
@@ -863,9 +867,9 @@ export const recoverWallet = async (mnemonic) => {
  * @returns {Promise<object>} - A Promise that resolves to the decoded authTicket as an object.
  */
 export const decodeAuthTicket = async (authTicket) => {
-  console.log("decodeAuthTicket", authTicket);
+  log("decodeAuthTicket", authTicket);
   let decoded = Buffer.from(authTicket, "base64");
-  console.log("decoded", decoded);
+  log("decoded", decoded);
 
   let output = {};
   try {
@@ -901,7 +905,7 @@ export const initBridge = async (
   value,
   consensusThreshold,
 ) => {
-  console.log(
+  log(
     "initBridge",
     ethereumAddress,
     bridgeAddress,
@@ -931,7 +935,7 @@ export const initBridge = async (
  * @returns {Promise<string>} - A Promise that resolves to the hash of the burn transaction.
  */
 export const burnZCN = async (amount) => {
-  console.log("burnZCN", amount);
+  log("burnZCN", amount);
   const hash = await goWasm.sdk.burnZCN(amount);
   return hash;
 };
@@ -944,7 +948,7 @@ export const burnZCN = async (amount) => {
  * @returns {Promise<string>} - A Promise that resolves to the hash of the minting transaction.
  */
 export const mintZCN = async (burnTrxHash, timeout) => {
-  console.log("mintZCN", burnTrxHash, timeout);
+  log("mintZCN", burnTrxHash, timeout);
   const hash = await goWasm.sdk.mintZCN(burnTrxHash, timeout);
   return hash;
 };
@@ -956,7 +960,7 @@ export const mintZCN = async (burnTrxHash, timeout) => {
  * @returns {Promise<any>} - A Promise that resolves to the payload for minting WZCN tokens.
  */
 export const getMintWZCNPayload = async (burnTrxHash) => {
-  console.log("getMintWZCNPayload", burnTrxHash);
+  log("getMintWZCNPayload", burnTrxHash);
   const result = await goWasm.sdk.getMintWZCNPayload(burnTrxHash);
   return result;
 };

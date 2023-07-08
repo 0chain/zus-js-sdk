@@ -167,23 +167,17 @@ export const getConsensusedInformationFromSharders = (sharders, url, params, par
     const urls = sharders.map((sharder) => sharder + url);
     const promises = urls.map((oneUrl) => getReq(oneUrl, params));
     let percentage = Math.ceil((promises.length * consensusPercentage) / 100);
-    console.log("BlueBirdPromise", BlueBirdPromise);
-    console.log("promises", promises);
 
     BlueBirdPromise.some(promises, percentage)
       .then(function (result) {
-        console.log("then result", result);
         const hashedResponses = result.map((r) => {
-          console.log("result.map r", r);
           return sha3.sha3_256(JSON.stringify(r.data));
         });
-        console.log("hashedResponses", hashedResponses);
         const consensusResponse = getConsensusMessageFromResponse(
           hashedResponses,
           percentage,
           result,
         );
-        console.log("consensusResponse", consensusResponse);
         if (consensusResponse === null) {
           reject({ error: "Not enough consensus" });
         } else {
@@ -588,7 +582,7 @@ export const postReqToBlobber = (url, data, params, clientId, publicKey, signatu
  */
 export const getReqBlobbers = (url, params, clientId) => {
   return axios.get(url, {
-    params: params,
+    params,
     headers: {
       "X-App-Client-ID": clientId,
     },
@@ -606,9 +600,8 @@ export const getReqBlobbers = (url, params, clientId) => {
  * @returns {Promise} - A Promise representing the GET request.
  */
 export const getReq = (url, params) => {
-  console.log("axios getReq url", url, "params", params);
   return axios.get(url, {
-    params: params,
+    params,
     transformResponse: function (data) {
       console.log("getReq transformResponse", data);
       return parseJson(data);
@@ -624,9 +617,7 @@ export const getReq = (url, params) => {
  * @returns {Promise} - A Promise representing the GET request for downloading a file.
  */
 export const getDownloadReq = (url, params) => {
-  return axios.get(url, {
-    params: params,
-  });
+  return axios.get(url, { params });
 };
 
 /**
@@ -651,9 +642,7 @@ export const plainGet = (url) => {
  */
 export const getReqFromMiner = async (url, params) => {
   try {
-    return await axios.get(url, {
-      params: params,
-    });
+    return await axios.get(url, { params });
   } catch (err) {
     return err;
   }
