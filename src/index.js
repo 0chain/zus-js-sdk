@@ -125,7 +125,6 @@ export const listAllocations = async () => {
  * @param {number} allocationConfig.datashards - The number of data shards for the allocation.
  * @param {number} allocationConfig.parityshards - The number of parity shards for the allocation.
  * @param {number} allocationConfig.size - The size of the allocation in bytes.
- * @param {number} allocationConfig.expiry - The expiry time of the allocation.
  * @param {number} allocationConfig.minReadPrice - The minimum price for reading from the allocation.
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
@@ -139,7 +138,6 @@ export const createAllocation = async (allocationConfig) => {
     allocationConfig.datashards,
     allocationConfig.parityshards,
     allocationConfig.size,
-    allocationConfig.expiry,
     allocationConfig.minReadPrice,
     allocationConfig.maxReadPrice,
     allocationConfig.minWritePrice,
@@ -156,7 +154,6 @@ export const createAllocation = async (allocationConfig) => {
  * @param {number} allocationConfig.datashards - The number of data shards for the allocation.
  * @param {number} allocationConfig.parityshards - The number of parity shards for the allocation.
  * @param {number} allocationConfig.size - The size of the allocation in bytes.
- * @param {number} allocationConfig.expiry - The expiry time of the allocation.
  * @param {number} allocationConfig.minReadPrice - The minimum price for reading from the allocation.
  * @param {number} allocationConfig.maxReadPrice - The maximum price for reading from the allocation.
  * @param {number} allocationConfig.minWritePrice - The minimum price for writing to the allocation.
@@ -171,7 +168,6 @@ export const createAllocationWithBlobbers = async (allocationConfig) => {
     allocationConfig.datashards,
     allocationConfig.parityshards,
     allocationConfig.size,
-    allocationConfig.expiry,
     allocationConfig.minReadPrice,
     allocationConfig.maxReadPrice,
     allocationConfig.minWritePrice,
@@ -248,7 +244,7 @@ export const cancelAllocation = async (allocationId) => {
  *
  * @param {string} allocationId - The ID of the allocation to update.
  * @param {number} size - The new size of the allocation in bytes.
- * @param {number} expiry - The new expiry time of the allocation.
+ * @param {bool} extend - Flag indicating if the allocation should be extended.
  * @param {boolean} lock - Flag indicating if the allocation should be locked.
  * @param {boolean} updateTerms - Flag indicating if the terms of the allocation should be updated.
  * @param {string} addBlobberId - The ID of the blobber to add to the allocation.
@@ -258,7 +254,7 @@ export const cancelAllocation = async (allocationId) => {
 export const updateAllocation = async (
   allocationId,
   size,
-  expiry,
+  extend,
   lock,
   updateTerms,
   addBlobberId,
@@ -267,7 +263,7 @@ export const updateAllocation = async (
   log("updateAllocation", {
     allocationId,
     size,
-    expiry,
+    extend,
     lock,
     updateTerms,
     addBlobberId,
@@ -276,7 +272,7 @@ export const updateAllocation = async (
   const hash = await goWasm.sdk.updateAllocation(
     allocationId,
     size,
-    expiry,
+    extend,
     lock,
     updateTerms,
     addBlobberId,
@@ -649,7 +645,6 @@ export const getLookupHash = async (allocationId, path) => {
  * @param {number} dataShards - The number of data shards.
  * @param {number} parityShards - The number of parity shards.
  * @param {number} size - The size of the allocation.
- * @param {number} expiry - The expiry duration of the allocation.
  * @param {number} minReadPrice - The minimum read price.
  * @param {number} maxReadPrice - The maximum read price.
  * @param {number} minWritePrice - The minimum write price.
@@ -661,7 +656,6 @@ export const getAllocationBlobbers = async (
   dataShards,
   parityShards,
   size,
-  expiry,
   minReadPrice,
   maxReadPrice,
   minWritePrice,
@@ -673,7 +667,6 @@ export const getAllocationBlobbers = async (
     dataShards,
     parityShards,
     size,
-    expiry,
     minReadPrice,
     maxReadPrice,
     minWritePrice,
