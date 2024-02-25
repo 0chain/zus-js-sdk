@@ -18,8 +18,12 @@
 "use strict";
 
 /* tslint:disable:no-console */
-const g = global || window || self;
-
+const g = (typeof window!=='undefined' && typeof window === "object")
+? window
+: typeof global === "object"
+    ? global
+    : null ;
+// elrjfnerl
 /**
  * Converts a hexadecimal string to a Uint8Array.
  *
@@ -327,7 +331,8 @@ export async function createWasm() {
   if (bridge.__proxy__) {
     return bridge.__proxy__;
   }
-
+   console.info("printing g value  -  " , g)
+  
   const go = new g.Go();
 
   loadWasm(go);

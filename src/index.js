@@ -28,6 +28,10 @@ let domain = "";
 let shouldShowLogs = false;
 const log = (...args) => shouldShowLogs && console.log(...args);
 
+export const testt = () =>{
+    console.info("from tsthh funtion of the SDK")
+    return "ok"
+}
 /**
  * Initializes the SDK with the provided configuration.
  *
@@ -42,19 +46,19 @@ export const init = async (config) => {
 
   const wasm = await createWasm();
   log("wasm", wasm);
-
-  if (shouldShowLogs) await wasm.sdk.showLogs();
+  
+  if (shouldShowLogs) await wasm?.sdk?.showLogs();
 
   log(...config);
-  await wasm.sdk.init(...config);
+  await wasm?.sdk?.init(...config);
 
-  log("window.bls", window.bls);
-  bls = window.bls;
+  log("window.bls", window?.bls);
+  bls = window?.bls;
   log("bls", bls);
-  await bls.init(bls.BN254);
+  await bls.init(bls?.BN254);
 
   goWasm = wasm;
-  window.Buffer = buff;
+  window?.Buffer = buff;
   Buffer = buff;
 };
 
@@ -1013,4 +1017,16 @@ export const multiDownload = async (allocId, files, authTicket, callbackFuncName
  */
 export const multiOperation = async (allocId, jsonMultiOperationOptions) => {
   return goWasm.sdk.multiOperation(allocId, jsonMultiOperationOptions);
+};
+
+/** Chimney Utils **/
+
+/**
+ * search Container - search a container with a given name
+ *
+ * @param {Array} props - Json Array of search Containers. eg: [username, passphrase, endpointUrl, 'name']
+ * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
+ */
+export const searchContainers = async (props) => {
+  return await goWasm.sdk.searchcontainer(...props)
 };
