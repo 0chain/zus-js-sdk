@@ -331,8 +331,7 @@ export async function createWasm() {
   if (bridge.__proxy__) {
     return bridge.__proxy__;
   }
-   console.info("printing g value  -  " , g)
-  
+    
   const go = new g.Go();
 
   loadWasm(go);

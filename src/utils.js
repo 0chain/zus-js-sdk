@@ -102,10 +102,9 @@ export const zcnContracts = {
     'cf8d0df9bd8cc637a4ff4e792ffe3686da6220c45f0e1103baa609f3f1751ef4',
   dexMintAddress:
     '6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712e0',
-  teamWallet,
 }
 
-const smartContractType = {
+export const smartContractType = {
   sharders: zcnContracts.storageSCAddress,
   miners: zcnContracts.minerSCAddress,
 }
@@ -876,28 +875,28 @@ export const getMinersAndShardersUtils = async (domain) => {
  * @returns {object} - A object of recipient_public_key and maker from the given auth ticket. 
  */
 
-export const decodeTicket = ticket => {
-  try {
-    const decoded = Buffer.from(ticket, 'base64').toString('binary')
-    const input = JSON.parse(decoded)
-    const decodedMarker = Buffer.from(input.marker, 'base64').toString('binary')
-    const markerInput = JSON.parse(decodedMarker)
-    const result = {
-      recipient_public_key: input['recipient_public_key'],
-      marker: JSON.stringify(markerInput),
-    }
-    return { result }
-  } catch (error) {
-    return { error }
-  }
-}
+// export const decodeTicket = ticket => {
+//   try {
+//     const decoded = Buffer.from(ticket, 'base64').toString('binary')
+//     const input = JSON.parse(decoded)
+//     const decodedMarker = Buffer.from(input.marker, 'base64').toString('binary')
+//     const markerInput = JSON.parse(decodedMarker)
+//     const result = {
+//       recipient_public_key: input['recipient_public_key'],
+//       marker: JSON.stringify(markerInput),
+//     }
+//     return { result }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
 
-export const getNonce =
-  (walletId = null) =>
-  async dispatch => {
-    const { error, data } = await dispatch(getBalance(walletId))
+// export const getNonce =
+//   (walletId = null) =>
+//   async dispatch => {
+//     const { error, data } = await dispatch(getBalance(walletId))
 
-    if (error && error === 'value not present') return { error }
+//     if (error && error === 'value not present') return { error }
 
-    return { data: { nonce: (data?.nonce || 0) + 1 } }
-  }
+//     return { data: { nonce: (data?.nonce || 0) + 1 } }
+//   }

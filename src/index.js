@@ -31,10 +31,6 @@ let domain = "";
 let shouldShowLogs = false;
 const log = (...args) => shouldShowLogs && console.log(...args);
 
-export const testt = () =>{
-    console.info("from tsthh funtion of the SDK")
-    return "ok"
-}
 /**
  * Initializes the SDK with the provided configuration.
  *
