@@ -91,6 +91,26 @@ export const Endpoints = {
   ZEROBOX_SERVER_DELETE_EXIST_ALLOCATION: "/v2/deleteallocation",
 };
 
+export const zcnContracts = {
+  faucetSCAddress:
+    '6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d3',
+  storageSCAddress:
+    '6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7',
+  minerSCAddress:
+    '6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d9',
+  interestPoolSCAddress:
+    'cf8d0df9bd8cc637a4ff4e792ffe3686da6220c45f0e1103baa609f3f1751ef4',
+  dexMintAddress:
+    '6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712e0',
+  teamWallet,
+}
+
+const smartContractType = {
+  sharders: zcnContracts.storageSCAddress,
+  miners: zcnContracts.minerSCAddress,
+}
+
+
 const configJson = {
   miners: [
     "https://dev2.zus.network/miner01",
@@ -848,3 +868,36 @@ export const getMinersAndShardersUtils = async (domain) => {
 
   return { error, data };
 };
+
+
+/**
+ * Decode the given auth ticket
+ * @param {string} ticket - Auth ticket
+ * @returns {object} - A object of recipient_public_key and maker from the given auth ticket. 
+ */
+
+export const decodeTicket = ticket => {
+  try {
+    const decoded = Buffer.from(ticket, 'base64').toString('binary')
+    const input = JSON.parse(decoded)
+    const decodedMarker = Buffer.from(input.marker, 'base64').toString('binary')
+    const markerInput = JSON.parse(decodedMarker)
+    const result = {
+      recipient_public_key: input['recipient_public_key'],
+      marker: JSON.stringify(markerInput),
+    }
+    return { result }
+  } catch (error) {
+    return { error }
+  }
+}
+
+export const getNonce =
+  (walletId = null) =>
+  async dispatch => {
+    const { error, data } = await dispatch(getBalance(walletId))
+
+    if (error && error === 'value not present') return { error }
+
+    return { data: { nonce: (data?.nonce || 0) + 1 } }
+  }

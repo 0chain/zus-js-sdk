@@ -4,6 +4,9 @@ import {
   Endpoints,
   getReqBlobbers,
   getMinersAndShardersUtils,
+  decodeTicket,
+  getNonce,
+  smartContractType
 } from "./utils";
 import { createWasm } from "./zcn";
 import * as bip39 from "bip39";
@@ -151,6 +154,36 @@ export const createAllocation = async (allocationConfig) => {
   );
 };
 
+
+/**
+ * Creates an free allocation with the specified configuration.
+ *
+ * @param {object} fundingMarker
+ * @param {object} wallet. 
+ * @returns {Promise<void>} - A Promise that resolves when the allocation has been created and return the hash of the transaction. 
+ */
+
+export const createFreeAllocation = async (fundingMarker,wallet) => {
+  
+  log("fundingMarker ", fundingMarker);
+
+  const { result: input, error: decodeError } = decodeTicket(fundingMarker)
+  if (decodeError) {
+    log('Error decoding funding marker: ', decodeError)
+    return { error: decodeError }
+  }
+
+  const { data: nonceData, error: nonceError } = await getNonce(wallet?.id)
+  if (typeof nonceData?.nonce !== 'number' || nonceError) {
+    log('Error getting nonce: ', nonceError)
+    return { error: 'Error getting nonce' }
+  }
+
+  return await goWasm?.sdk?.createfreeallocation(input.marker)
+};
+
+
+
 /**
  * Creates an allocation with the specified blobber config.
  *
@@ -284,6 +317,71 @@ export const updateAllocation = async (
   );
   log("hash", hash);
   return hash;
+};
+
+
+/**
+ * getAllocationMinLock  - expire in milliseconds
+ *
+ *
+ * @param {number} size - The new size of the allocation in bytes.
+ * @param {number} parityShards - No of parity shards
+ * @param {number} dataShards -No of data shards
+ * @param {number} calculatedMaxWritePrice - Maximum write price 
+ * 
+ * @returns {Promise<number>} - A Promise that resolves to a number amount of tokens
+ */
+export const getAllocationMinLock = async (
+  dataShards,
+  size,
+  parityShards,
+  calculatedMaxWritePrice
+) => {
+
+  log("getAllocationMinLock", {
+    dataShards,
+    size,
+    parityShards,
+    calculatedMaxWritePrice
+    });
+
+  return await goWasm.sdk.getAllocationMinLock(
+    dataShards,
+    parityShards,
+    size,
+    calculatedMaxWritePrice
+  )
+};
+
+/**
+ * getUpdateAllocationMinLock  - expire in milliseconds
+ *
+ *
+ * @param {string} allocationID -  The ID of the allocation to update.
+ * @param {number} size - The new size of the allocation in bytes.
+ * @param {boolean} extend 
+ * @param {string} addBlobberId - Blobber ID
+ * @param {string} removeBlobberId - ID of blobber to be removed. 
+ * 
+ * @returns {Promise<number>} - A Promise that resolves to a number min_lock_demand
+ */
+export const getUpdateAllocationMinLock = async (
+  allocationID,
+  size,
+  extend,
+  addBlobberId,
+  removeBlobberId
+) => {
+
+  log("getUpdateAllocationMinLock", {
+    allocationID,
+    size,
+    extend,
+    addBlobberId,
+    removeBlobberId
+  });
+
+  return await goWasm.sdk.getUpdateAllocationMinLock( id,size,  extend, addBlobberId, removeBlobberId )
 };
 
 /**
@@ -727,6 +825,8 @@ export const getReadPoolInfo = async (clientID) => {
   return readPool;
 };
 
+
+
 /**
  * Locks the write pool of an allocation.
  *
@@ -742,6 +842,38 @@ export const lockWritePool = async (allocationId, tokens, fee) => {
   const hash = await goWasm.sdk.lockWritePool(allocationId, tokens, fee);
   return hash;
 };
+
+
+/**
+ * Locks the stake pool of an allocation.
+*
+ * @param {string} providerType - Type of provider
+ * @param {number} txnValue - The number of tokens to lock in the stake pool.
+ * @param {number} fee - The fee to pay for locking the write pool.
+ * @param {string} providerId - Provider ID
+ * @returns {Promise<string>} - A Promise that resolves to the hash of the lock stake pool transaction.
+ */
+export const lockStakePool = async (providerType,txnValue,fee,providerId) => {
+  log("lockStakePool", providerType, txnValue, fee);
+  const hash = await goWasm.sdk.lockStakePool(providerType, txnValue, fee,providerId);
+  return hash;
+};
+
+
+/**
+ * unlock amount in stake pool
+*
+ * @param {string} providerType - Type of provider
+ * @param {number} fee - The fee to pay for locking the write pool.
+ * @param {string} providerId - Provider ID
+ * @returns {Promise<number>} - A Promise that resolves to the unstake amount
+ */
+export const unlockStakePool = async (providerType,fee,providerId) => {
+  log("unlockStakePool", providerType, providerId, fee);
+  const hash = await goWasm.sdk.unlockStakePool(providerType, fee,providerId);
+  return hash;
+};
+
 
 /**
  * Truncates an address string by removing characters from the start and end.
@@ -987,6 +1119,19 @@ export const multiUpload = async (jsonBulkUploadOptions) => {
   return res;
 };
 
+
+/**
+ * Cancel the upload in between 
+ * @param {string} allocation_id - the allocation the directory belongs to.
+ * @param {string} remotePath - The path of the file within the allocation.
+ * @returns {Promise<any>} - A Promise that resolves cancel upload operation. 
+ */
+export const cancelUpload = async (allocId,remotePath) => {
+  const res = await goWasm.sdk.cancelUpload(allocId, remotePath);
+  return res;
+};
+
+
 /**
  * Retrieves the list of miners and sharders.
  * @returns {Promise<any>} - A Promise that resolves to the list of miners and sharders.
@@ -1019,14 +1164,72 @@ export const multiOperation = async (allocId, jsonMultiOperationOptions) => {
   return goWasm.sdk.multiOperation(allocId, jsonMultiOperationOptions);
 };
 
+
+
+/*  Common - functions   */
+
+
+/**
+ * refreshJwtToken - get new JWT token with unexpired token. 
+ *
+ * @param {string} phoneNumber - Phone number of user
+  @param {string} jwtToken - Existing JWT token which is about to expire
+ * @returns {Promise<any>} - A Promise that resolves to the fresh JWT token
+ */
+export const refreshJwtToken = async (phoneNumber , jwtToken) => {
+  return await goWasm.sdk.refreshJwtToken(
+    phoneNumber,
+    jwtToken
+  )
+};
+
+/**
+ * makeSCRestAPICall - required Rest call to sharders
+ *
+ * @param {string} scType - Type of SC ( blobbers/sharders )
+  @param {string} endpoint - relativePath
+  @param {string} stringifiedParams - string of json object of params
+ * @returns {Promise<any>} - A Promise that resolves when the rest call sent successfully.
+ */
+  export const makeSCRestAPICall = async (scType , endpoint,stringifiedParams) => {
+    return await goWasm.sdk.makeSCRestAPICall(
+      smartContractType[scType],
+      endpoint,
+      JSON.stringify(stringifiedParams)
+    )
+  };
+  
+
+
 /** Chimney Utils **/
 
 /**
  * search Container - search a container with a given name
  *
  * @param {Array} props - Json Array of search Containers. eg: [username, passphrase, endpointUrl, 'name']
- * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
+ * @returns {Promise<any>} - A Promise that resolves to the search result of a containers with a given name
  */
 export const searchContainers = async (props) => {
   return await goWasm.sdk.searchcontainer(...props)
+};
+
+/**
+ * update Container -  UpdateContainer update the given container ID with a new image
+ *
+ * @param {Array} props - Json Array of update Containers params. eg: [username, password, domain, containerID, NewImageID]
+ * @returns {Promise<any>} - A Promise that resolves to the newContainer details. 
+ */
+export const updateContainer = async (props) => {
+  return await goWasm.sdk.updatecontainer(...props)
+};
+
+
+/**
+ * update Blobber Settings -  update Blobber details 
+ *
+ * @param {Object} props - expects settings JSON of type sdk.Blobber ex. { ...blobberData,  stake_pool_settings: { ...blobberData.stake_pool_settings, num_delegates: noOfDelegates, service_charge: serviceCharge / 100,}}
+ * @returns {Promise<any>} - A Promise that resolves to the transaction details. 
+ */
+export const updateBlobberSettings = async (props) => {
+  return await goWasm.sdk.updateBlobberSettings(props)
 };
