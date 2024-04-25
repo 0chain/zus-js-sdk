@@ -33,6 +33,8 @@
     "access": "public"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.42",
+    "@types/json-bigint": "^1.0.4",
     "tsup": "^6.5.0",
     "typescript": "^4.9.4"
   },
