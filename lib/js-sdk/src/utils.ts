@@ -1,30 +1,15 @@
-/*
- * This file is part of the 0chain @zerochain/0chain distribution (https://github.com/0chain/client-sdk).
- * Copyright (c) 2018 0chain LLC.
- *
- * 0chain @zerochain/0chain program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
-/* tslint:disable:no-console */
-
 import { basicReqWithDispatch } from "./requests";
 
-var sha3 = require("js-sha3");
-var JSONbig = require("json-bigint");
-var axios = require("axios");
-// import {Promise as BlueBirdPromise} from "bluebird";
-var BlueBirdPromise = require("bluebird");
-var moment = require("moment");
+import sha3 from "js-sha3";
+// var JSONbig = require("json-bigint");
+// var axios = require("axios");
+// // import {Promise as BlueBirdPromise} from "bluebird";
+// var BlueBirdPromise = require("bluebird");
+// var moment = require("moment");
+import JSONbig from "json-bigint";
+import axios from "axios";
+import BlueBirdPromise from "bluebird";
+import moment from "moment";
 
 const StorageSmartContractAddress =
   "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
