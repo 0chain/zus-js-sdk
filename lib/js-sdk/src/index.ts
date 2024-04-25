@@ -38,7 +38,10 @@ export const init = async (config) => {
   if (!config.length) throw new Error("Missing configuration parameters");
 
   log("config", config);
-  domain = config[1]?.replace("https://", "")?.replace("http://", "")?.replace("/dns", "");
+  domain = config[1]
+    ?.replace("https://", "")
+    ?.replace("http://", "")
+    ?.replace("/dns", "");
 
   const wasm = await createWasm();
   log("wasm", wasm);
@@ -78,8 +81,24 @@ export const getBalance = async (clientId) => {
  * @returns {Promise<any>} - A Promise that resolves to the result of submitting the transaction.
  */
 export const sendTransaction = async (ae, toClientId, val, note) => {
-  log("sendTransaction from:", ae, "to:", toClientId, "value:", val, "note:", note);
-  return submitTransaction(ae, toClientId, val, note, TransactionType.SEND, domain);
+  log(
+    "sendTransaction from:",
+    ae,
+    "to:",
+    toClientId,
+    "value:",
+    val,
+    "note:",
+    note
+  );
+  return submitTransaction(
+    ae,
+    toClientId,
+    val,
+    note,
+    TransactionType.SEND,
+    domain
+  );
 };
 
 /**
@@ -143,7 +162,7 @@ export const createAllocation = async (allocationConfig) => {
     allocationConfig.minWritePrice,
     allocationConfig.maxWritePrice,
     allocationConfig.lock,
-    [],
+    []
   );
 };
 
@@ -173,7 +192,7 @@ export const createAllocationWithBlobbers = async (allocationConfig) => {
     allocationConfig.minWritePrice,
     allocationConfig.maxWritePrice,
     allocationConfig.lock,
-    allocationConfig.blobbers,
+    allocationConfig.blobbers
   );
   return txn;
 };
@@ -258,7 +277,7 @@ export const updateAllocation = async (
   lock,
   updateTerms,
   addBlobberId,
-  removeBlobberId,
+  removeBlobberId
 ) => {
   log("updateAllocation", {
     allocationId,
@@ -276,7 +295,7 @@ export const updateAllocation = async (
     lock,
     updateTerms,
     addBlobberId,
-    removeBlobberId,
+    removeBlobberId
   );
   log("hash", hash);
   return hash;
@@ -317,7 +336,7 @@ export const download = async (
   downloadThumbnailOnly,
   numBlocks,
   callbackFuncName,
-  isFinal = true,
+  isFinal = true
 ) => {
   log("download allocationID", allocationID, "remotePath", remotePath);
   const file = await goWasm.sdk.download(
@@ -328,7 +347,7 @@ export const download = async (
     downloadThumbnailOnly,
     numBlocks,
     callbackFuncName,
-    isFinal,
+    isFinal
   );
   return file;
 };
@@ -354,7 +373,12 @@ export const getFaucetToken = async (amount = 1) => {
  * @param {number} value - The value to send along with the method execution.
  * @returns {Promise<void>} - A Promise that resolves when the smart contract method execution is complete.
  */
-export const executeSmartContract = async (address, methodName, input, value) => {
+export const executeSmartContract = async (
+  address,
+  methodName,
+  input,
+  value
+) => {
   log("executeSmartContract before", address, methodName, input, value);
   await goWasm.sdk.executeSmartContract(address, methodName, input, value);
   log("executeSmartContract after");
@@ -394,7 +418,7 @@ export const share = async (
   encryptionPublicKey,
   expireAt,
   revoke,
-  availableAfter,
+  availableAfter
 ) => {
   log("share allocationId", allocationId, "filePath", filePath);
 
@@ -405,7 +429,7 @@ export const share = async (
     encryptionPublicKey,
     expireAt,
     revoke,
-    availableAfter,
+    availableAfter
   );
 
   log("authTicket after share", authTicket);
@@ -495,9 +519,21 @@ export const moveObject = async (allocationId, path, destination) => {
  * @param {boolean} isLive - Indicates if the playback is in live mode.
  * @returns {Promise<void>} - A Promise that resolves when the playback starts.
  */
-export const play = async (allocationId, remotePath, authTicket, lookupHash, isLive) => {
+export const play = async (
+  allocationId,
+  remotePath,
+  authTicket,
+  lookupHash,
+  isLive
+) => {
   log("play");
-  await goWasm.sdk.play(allocationId, remotePath, authTicket, lookupHash, isLive);
+  await goWasm.sdk.play(
+    allocationId,
+    remotePath,
+    authTicket,
+    lookupHash,
+    isLive
+  );
 };
 
 /**
@@ -571,7 +607,7 @@ export const downloadBlocks = async (
   numBlocks,
   startBlockNumber,
   endBlockNumber,
-  callbackFuncName,
+  callbackFuncName
 ) => {
   log("downloadBlocks allocationID", allocationID, "remotePath", remotePath);
   const output = await goWasm.sdk.downloadBlocks(
@@ -582,7 +618,7 @@ export const downloadBlocks = async (
     numBlocks,
     startBlockNumber,
     endBlockNumber,
-    callbackFuncName,
+    callbackFuncName
   );
   return output;
 };
@@ -659,7 +695,7 @@ export const getAllocationBlobbers = async (
   minReadPrice,
   maxReadPrice,
   minWritePrice,
-  maxWritePrice,
+  maxWritePrice
 ) => {
   log("getAllocationBlobbers", referredBlobberURLs);
   const blobberList = await goWasm.sdk.getAllocationBlobbers(
@@ -670,7 +706,7 @@ export const getAllocationBlobbers = async (
     minReadPrice,
     maxReadPrice,
     minWritePrice,
-    maxWritePrice,
+    maxWritePrice
   );
   return blobberList;
 };
@@ -748,7 +784,12 @@ export const lockWritePool = async (allocationId, tokens, fee) => {
  * @param {number} end - The number of characters to keep from the end of the address string. Default is -4.
  * @returns {string} - The truncated address string.
  */
-const truncateAddress = (addressString = "", start = 5, flag = true, end = -4) => {
+const truncateAddress = (
+  addressString = "",
+  start = 5,
+  flag = true,
+  end = -4
+) => {
   if (flag) {
     return `${addressString?.slice(0, start)}...${addressString?.slice(end)}`;
   } else {
@@ -896,7 +937,7 @@ export const initBridge = async (
   ethereumNodeURL,
   gasLimit,
   value,
-  consensusThreshold,
+  consensusThreshold
 ) => {
   log(
     "initBridge",
@@ -907,7 +948,7 @@ export const initBridge = async (
     ethereumNodeURL,
     gasLimit,
     value,
-    consensusThreshold,
+    consensusThreshold
   );
   await goWasm.sdk.initBridge(
     ethereumAddress,
@@ -917,7 +958,7 @@ export const initBridge = async (
     ethereumNodeURL,
     gasLimit,
     value,
-    consensusThreshold,
+    consensusThreshold
   );
 };
 
@@ -1000,7 +1041,12 @@ export const getMinersAndSharders = async () => {
  * @param {string} callbackFuncName - Name of the callback function to call when a file is downloaded.
  * @returns {Promise<any>} - A Promise that resolves to the list of files downloaded files.
  */
-export const multiDownload = async (allocId, files, authTicket, callbackFuncName) => {
+export const multiDownload = async (
+  allocId,
+  files,
+  authTicket,
+  callbackFuncName
+) => {
   return goWasm.sdk.multiDownload(allocId, files, authTicket, callbackFuncName);
 };
 
