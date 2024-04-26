@@ -318,9 +318,9 @@ async function loadWasm(go) {
   go.run(result.instance);
 }
 
+type TSdkProxy
 /**
  * Creates a WebAssembly (Wasm) instance and returns a proxy object for accessing SDK methods.
- *
  * @returns {Object} - The proxy object for accessing SDK methods.
  */
 export async function createWasm() {
