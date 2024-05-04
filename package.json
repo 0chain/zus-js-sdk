@@ -8,7 +8,11 @@
     "example/webapp/"
   ],
   "scripts": {
-    "dev": "cd ./example/webapp && yarn dev",
-    "dev:lib": "cd ./lib/js-sdk && yarn dev"
+    "dev:app": "cd ./example/webapp && yarn dev",
+    "dev:lib": "cd ./lib/js-sdk && yarn dev",
+    "dev": "concurrently \"yarn dev:app\" \"yarn dev:lib\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
