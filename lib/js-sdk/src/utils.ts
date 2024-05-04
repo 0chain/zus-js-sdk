@@ -5,7 +5,7 @@ import JSONbig from "json-bigint";
 import axios, { AxiosRequestConfig } from "axios";
 import BlueBirdPromise from "bluebird";
 import moment from "moment";
-import { AccountEntity, ReqHeaders, TxnData } from "./types";
+import { AccountEntity, ReqHeaders, TxnData, globalCtx } from "./types";
 
 const StorageSmartContractAddress = "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
 const MinerSmartContractAddress = "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d9";
@@ -223,7 +223,7 @@ export const byteToHexString = (uint8arr: Uint8Array) => {
  * Converts a hexadecimal string to a Uint8Array.
  *
  * @param str The hexadecimal string to convert.
- * @returns The Uint8Array representation of the hexadecimal string.
+ * @returns The Uint8Array bytes representation of the hexadecimal string.
  */
 export const hexStringToByte = (str: string) => {
   if (!str) {
@@ -738,6 +738,16 @@ export const getTransactionResponse = (data: TxnData) => {
   return txn;
 };
 
+export const getBls = () => {
+  if (!globalCtx.bls) {
+    throw new Error(
+      'window.bls unavailable. Add `<script src="https://cdn.jsdelivr.net/gh/herumi/bls-wasm@v1.0.0/browser/bls.js"></script>` before accessing this'
+    );
+  }
+
+  return globalCtx.bls;
+};
+
 /**
  * Submits a transaction to the network.
  *
@@ -773,6 +783,7 @@ export const submitTransaction = async (
   const hashdata = ts + ":" + nonceToUse + ":" + ae.id + ":" + toClientId + ":" + val + ":" + hashPayload;
   const hash = sha3.sha3_256(hashdata);
   const bytehash = hexStringToByte(hash);
+  const bls = getBls();
   const sec = new bls.SecretKey();
   sec.deserializeHexStr(ae.secretKey);
   const sig = sec.sign(bytehash);
