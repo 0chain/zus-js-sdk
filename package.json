@@ -5,10 +5,10 @@
   "private": true,
   "workspaces": [
     "lib/js-sdk/",
-    "example/app/"
+    "example/webapp/"
   ],
   "scripts": {
-    "dev": "cd ./example/app && yarn dev",
+    "dev": "cd ./example/webapp && yarn dev",
     "dev:lib": "cd ./lib/js-sdk && yarn dev"
   }
 }
