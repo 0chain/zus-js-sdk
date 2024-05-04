@@ -1,6 +1,6 @@
 "use strict";
 
-import { Bridge, globalCtx } from "./types";
+import { Bridge, UploadObject, globalCtx } from "./types";
 import { hexStringToByte } from "./utils";
 
 const g = globalCtx;
@@ -127,25 +127,13 @@ const maxTime = 10 * 1000;
 
 /** BRIDGE SETUP END */
 
-type BulkUploadOption = {
-  allocationId: string;
-  remotePath: string;
-  file: File;
-  thumbnailBytes: Uint8Array;
-  encrypt: boolean;
-  isUpdate: boolean;
-  isRepair: boolean;
-  numBlocks: number;
-  callback: (totalBytes: number, completedBytes: number, error: any) => void;
-};
-
 /**
  * Performs a bulk upload of multiple files.
  *
  * @param options An array of upload options for each file.
  * @returns A promise that resolves to the upload result.
  */
-async function bulkUpload(options: BulkUploadOption[]) {
+async function bulkUpload(options: UploadObject[]) {
   const bridge = getBridge();
 
   const start = bridge.glob.index;

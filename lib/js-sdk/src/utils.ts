@@ -6,6 +6,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import BlueBirdPromise from "bluebird";
 import moment from "moment";
 import { AccountEntity, ReqHeaders, TxnData, globalCtx } from "./types";
+import { TTransactionType } from ".";
 
 const StorageSmartContractAddress = "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d7";
 const MinerSmartContractAddress = "6dba10422e368813802877a85039d3985d96760ed844092319743fb3a76712d9";
@@ -226,9 +227,8 @@ export const byteToHexString = (uint8arr: Uint8Array) => {
  * @returns The Uint8Array bytes representation of the hexadecimal string.
  */
 export const hexStringToByte = (str: string) => {
-  if (!str) {
-    return new Uint8Array();
-  }
+  if (!str) return new Uint8Array();
+
   const a = [];
   for (let i = 0, len = str.length; i < len; i += 2) {
     a.push(parseInt(str.substring(i, i + 2), 16));
@@ -763,7 +763,7 @@ export const submitTransaction = async (
   toClientId: string,
   val: number,
   note: string,
-  transactionType: string,
+  transactionType: TTransactionType,
   domain: string
 ) => {
   const hashPayload = sha3.sha3_256(note);
@@ -804,7 +804,7 @@ export const submitTransaction = async (
     public_key: ae.public_key,
   };
 
-  return new Promise(async function (resolve, reject) {
+  return new Promise<TxnData>(async function (resolve, reject) {
     const { data: minersAndSharders } = await getMinersAndShardersUtils(domain);
     doParallelPostReqToAllMiners(minersAndSharders.miners, Endpoints.PUT_TRANSACTION, data)
       .then(response => {
