@@ -1,7 +1,7 @@
-type TFetchOptions = RequestInit & { timeout?: number };
+type FetchOptions = RequestInit & { timeout?: number };
 export const fetchWithTimeout = async (
   url: string,
-  options: TFetchOptions = {}
+  options: FetchOptions = {}
 ) => {
   const { timeout = 15000, ...fetchOptions } = options;
 
@@ -38,13 +38,13 @@ export const handleJsonResp = async (response: Response) => {
   return response.json();
 };
 
-type TBasicReqProps = {
+type BasicReqProps = {
   url: string;
-  options?: TFetchOptions;
+  options?: FetchOptions;
   params?: Record<string, string>;
 };
 /* Handles basic requests with params with JSON parsing of the response. */
-export const basicRequest = async (props: TBasicReqProps) => {
+export const basicRequest = async (props: BasicReqProps) => {
   const { url, options = {}, params = {} } = props;
 
   const fullUrl = new URL(url);
@@ -56,5 +56,5 @@ export const basicRequest = async (props: TBasicReqProps) => {
   return await fetchWithTimeout(reqUrl, options)
     .then(handleJsonResp)
     .then((data) => ({ data, error: null }))
-    .catch((error) => ({ data: null, error }));
+    .catch((error: Error) => ({ data: null, error }));
 };
