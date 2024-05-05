@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "JS webapp",
+      "path": "example/webapp/"
+    },
+    {
+      "name": "JS SDK lib",
+      "path": "lib/js-sdk/"
+    }
+  ],
+  "settings": {
+    "terminal.integrated.cwd": "${workspaceFolder}",
+  }
+}
