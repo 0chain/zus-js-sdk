@@ -1,0 +1,3 @@
+[submodule "example/webapp"]
+	path = example/webapp
+	url = git@github.com:0chain/zus-example-website.git
