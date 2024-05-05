@@ -8,53 +8,16 @@ const g = globalCtx;
 /** BRIDGE SETUP START */
 
 /**
- * @returns Bridge object. This is an easier way to refer to the Go WASM object.
- */
-const getBridge = (): Bridge => {
-  const currBridge = g.__zcn_wasm__;
-  if (currBridge) return currBridge;
-
-  const newBridge: Bridge = {
-    glob: {
-      index: 0,
-    },
-    jsProxy: {
-      secretKey: null,
-      publicKey: null,
-      sign: blsSign,
-      verify: blsVerify,
-      verifyWith: blsVerifyWith,
-      createObjectURL,
-      sleep,
-    },
-    sdk: {}, // proxy object for go to expose its methods // START HERE
-  };
-  g.__zcn_wasm__ = newBridge;
-
-  return newBridge;
-};
-
-const getProxy = (bridge: Bridge) => {
-  const proxy = bridge.__proxy__;
-  if (!proxy) {
-    throw new Error("The Bridge proxy (__proxy__) is not initialized. Make sure to call createWasm first.");
-  }
-  return proxy;
-};
-
-/**
  * Signs a hash using BLS signature scheme.
  *
  * @param hash The hash to be signed.
  * @returns The serialized signature in hexadecimal format.
  */
-function blsSign(hash: string) {
-  console.log("blsSign");
+async function blsSign(hash: string) {
+  console.log("async blsSign", hash);
+
   const bridge = getBridge();
-
-  const { jsProxy } = bridge;
-
-  if (!jsProxy || !jsProxy.secretKey) {
+  if (!bridge.jsProxy || !bridge.jsProxy.secretKey) {
     const errMsg = "err: bls.secretKey is not initialized";
     console.warn(errMsg);
     throw new Error(errMsg);
@@ -62,7 +25,9 @@ function blsSign(hash: string) {
 
   const bytes = hexStringToByte(hash);
 
-  const sig = jsProxy.secretKey.sign(bytes);
+  console.log("bridge.jsProxy.secretKey", bridge.jsProxy.secretKey);
+  const sig = bridge.jsProxy.secretKey.sign(bytes);
+  console.log("sig", sig);
 
   if (!sig) {
     const errMsg = "err: wasm blsSign function failed to sign transaction";
@@ -70,7 +35,8 @@ function blsSign(hash: string) {
     throw new Error(errMsg);
   }
 
-  return sig.serializeToHexStr();
+  console.log("sig.serializeToHexStr()", sig.serializeToHexStr());
+  return sig.serializeToHexStr() as string;
 }
 
 export async function createObjectURL(buf: ArrayBuffer, mimeType: string) {
@@ -125,7 +91,44 @@ const sleep = (ms = 1000) =>
  */
 const maxTime = 10 * 1000;
 
+/**
+ * @returns Bridge object. This is an easier way to refer to the Go WASM object.
+ */
+const getBridge = (): Bridge => {
+  const currBridge = g.__zcn_wasm__;
+  if (currBridge) return currBridge;
+
+  const newBridge: Bridge = {
+    glob: {
+      index: 0,
+    },
+    jsProxy: {
+      secretKey: null,
+      publicKey: null,
+      sign: blsSign,
+      verify: blsVerify,
+      verifyWith: blsVerifyWith,
+      createObjectURL,
+      sleep,
+    },
+    sdk: {},
+  };
+  g.__zcn_wasm__ = newBridge;
+
+  return newBridge;
+};
+
+getBridge();
+
 /** BRIDGE SETUP END */
+
+const getProxy = (bridge: Bridge) => {
+  const proxy = bridge.__proxy__;
+  if (!proxy) {
+    throw new Error("The Bridge proxy (__proxy__) is not initialized. Make sure to call createWasm first.");
+  }
+  return proxy;
+};
 
 /**
  * Performs a bulk upload of multiple files.

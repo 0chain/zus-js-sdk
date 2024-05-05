@@ -4,12 +4,12 @@
   "description": "[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)",
   "scripts": {
     "start": "node src/example.js",
-    "dev": "tsup src/index.ts --watch --format cjs,esm --dts",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsc -w",
+    "build": "tsc",
     "lint": "tsc"
   },
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "lib/**/*",
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.42",
     "@types/json-bigint": "^1.0.4",
-    "tsup": "^6.5.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {

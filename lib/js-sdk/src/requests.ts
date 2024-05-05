@@ -1,8 +1,5 @@
 type FetchOptions = RequestInit & { timeout?: number };
-export const fetchWithTimeout = async (
-  url: string,
-  options: FetchOptions = {}
-) => {
+export const fetchWithTimeout = async (url: string, options: FetchOptions = {}) => {
   const { timeout = 15000, ...fetchOptions } = options;
 
   const controller = new AbortController();
@@ -55,6 +52,6 @@ export const basicRequest = async (props: BasicReqProps) => {
   const reqUrl = fullUrl.toString();
   return await fetchWithTimeout(reqUrl, options)
     .then(handleJsonResp)
-    .then((data) => ({ data, error: null }))
+    .then(data => ({ data, error: null }))
     .catch((error: Error) => ({ data: null, error }));
 };

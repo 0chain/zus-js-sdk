@@ -10,7 +10,10 @@
   "scripts": {
     "dev:app": "cd ./example/webapp && yarn dev",
     "dev:lib": "cd ./lib/js-sdk && yarn dev",
-    "dev": "concurrently \"yarn dev:app\" \"yarn dev:lib\""
+    "dev": "concurrently \"yarn dev:app\" \"yarn dev:lib\"",
+    "build:app": "cd ./example/webapp && yarn build",
+    "build:lib": "cd ./lib/js-sdk && yarn build",
+    "build": "yarn build:app && yarn build:lib"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

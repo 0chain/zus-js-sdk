@@ -1,21 +1,27 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
+    "checkJs": false,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+
     /* Base Options: */
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "es2022",
+    "target": "es2017",
     "allowJs": true,
     "resolveJsonModule": true,
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "moduleResolution": "node",
-    "module": "esnext",
+    "module": "commonjs",
     "noEmit": false,
     /* Output Configuration: */
     "outDir": "dist", // Specify the output directory for compiled files
-    "declaration": true, // Generate declaration files (.d.ts)
+    "declaration": true // Generate declaration files (.d.ts)
     /* If your code runs in the DOM: */
-    "lib": ["es2022", "dom", "dom.iterable"]
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

@@ -229,7 +229,7 @@ export const byteToHexString = (uint8arr: Uint8Array) => {
 export const hexStringToByte = (str: string) => {
   if (!str) return new Uint8Array();
 
-  const a = [];
+  const a: number[] = [];
   for (let i = 0, len = str.length; i < len; i += 2) {
     a.push(parseInt(str.substring(i, i + 2), 16));
   }
