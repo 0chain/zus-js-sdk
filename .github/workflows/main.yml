@@ -18,7 +18,7 @@ jobs:
           cache: 'yarn'
       
       - name: Installing dependencies
-        run: cd lib/js-sdk && yarn
+        run: yarn --immutable
 
       - name: tsc Linting
         run: cd lib/js-sdk && yarn lint
