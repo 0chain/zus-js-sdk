@@ -35,13 +35,15 @@ jobs:
         run: yarn install
 
       - name: tsc Linting
-        run: cd lib/js-sdk && yarn lint
+        working-directory: lib/js-sdk
+        run: yarn lint
 
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: cd lib/js-sdk && yarn release
+          publish: yarn release
+          cwd: lib/js-sdk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.npm_token2 }}
