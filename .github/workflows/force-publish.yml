@@ -39,4 +39,4 @@ jobs:
         working-directory: lib/js-sdk
         run: yarn build && npm publish --no-workspaces
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token2}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
