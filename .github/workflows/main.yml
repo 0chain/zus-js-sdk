@@ -20,10 +20,10 @@ jobs:
           node-version: "lts/*"
           cache: "yarn"
 
-      - name: Install Git submodule present at example/webapp
+      - name: Add Git submodule present at example/webapp
         run: git submodule update --init --recursive
 
-      - name: Increase verbosity for yarn install
+      - name: Install dependencies
         run: yarn install
 
       - name: tsc Linting
