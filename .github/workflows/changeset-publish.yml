@@ -19,14 +19,20 @@ jobs:
       - name: Action checkout
         uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setting up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'yarn'
-      
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - name: Add Git submodule present at example/webapp
+        run: git submodule update --init --recursive
+
       - name: Installing dependencies
-        run: cd lib/js-sdk && yarn
+        run: yarn install
 
       - name: tsc Linting
         run: cd lib/js-sdk && yarn lint
