@@ -27,7 +27,9 @@ jobs:
         run: yarn install
 
       - name: tsc Linting
-        run: cd lib/js-sdk && yarn lint
+        working-directory: lib/js-sdk
+        run: yarn lint
 
       - name: Build SDK dist/
-        run: cd lib/js-sdk && yarn build
+        working-directory: lib/js-sdk
+        run: yarn build
