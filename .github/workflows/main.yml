@@ -20,12 +20,8 @@ jobs:
           node-version: "lts/*"
           cache: "yarn"
 
-      - name: Check for yarn.lock file
-        run: |
-          if [ ! -f "yarn.lock" ]; then
-            echo "yarn.lock file not found."
-            exit 1
-          fi
+      - name: Install Git submodule present at example/webapp
+        run: git submodule update --init --recursive
 
       - name: Increase verbosity for yarn install
         run: yarn install
