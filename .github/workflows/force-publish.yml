@@ -1,0 +1,43 @@
+name: F-Publish
+on:
+  push:
+    branches:
+      - "**"
+
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Action checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setting up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          registry-url: https://registry.npmjs.org/
+          cache: "yarn"
+
+      - name: Add Git submodule present at example/webapp
+        run: git submodule update --init --recursive
+
+      - name: Installing dependencies
+        run: yarn install
+
+      - name: tsc Linting
+        working-directory: lib/js-sdk
+        run: yarn lint
+
+      - name: Creating build.
+        working-directory: lib/js-sdk
+        run: yarn build && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token2}}

@@ -46,15 +46,8 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
 
-      - name: Installing yarn.
-        run: |
-          npm install --global yarn
-
-      - name: Installing dependencies.
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: Creating build.
-        run: npm publish
+      - name: logs
+        run: echo $NODE_AUTH_TOKEN
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token2}}
+
