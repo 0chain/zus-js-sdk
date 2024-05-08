@@ -6,7 +6,9 @@
     "start": "node src/example.js",
     "dev": "tsc -w",
     "build": "tsc",
-    "lint": "tsc"
+    "lint": "tsc --noEmit",
+    "release": "yarn build && yarn changeset publish",
+    "version": "yarn changeset"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -33,6 +35,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@types/bluebird": "^3.5.42",
     "@types/json-bigint": "^1.0.4",
     "typescript": "^4.9.4"
