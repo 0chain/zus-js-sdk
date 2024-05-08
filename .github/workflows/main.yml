@@ -17,7 +17,7 @@ jobs:
       - name: Setting up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
           cache: "yarn"
 
       - name: Check for yarn.lock file
@@ -27,11 +27,8 @@ jobs:
             exit 1
           fi
 
-      - name: Check network connectivity
-        run: ping -c 5 google.com
-
       - name: Increase verbosity for yarn install
-        run: yarn install --verbose
+        run: yarn install
 
       - name: tsc Linting
         run: cd lib/js-sdk && yarn lint
