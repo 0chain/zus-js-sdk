@@ -37,6 +37,6 @@ jobs:
 
       - name: Creating build.
         working-directory: lib/js-sdk
-        run: yarn build && npm publish
+        run: yarn build && npm publish --no-workspaces
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token2}}
