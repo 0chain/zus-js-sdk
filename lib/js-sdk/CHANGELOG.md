@@ -1,5 +1,15 @@
 # @zerochain/zus-sdk
 
+## 0.7.0
+
+### Minor Changes
+
+- add TS support
+
+### Patch Changes
+
+- minor fixes
+
 ## 0.6.0
 
 ### Minor Changes
