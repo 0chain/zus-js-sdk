@@ -1161,7 +1161,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zerochain/zus-sdk@workspace:lib/js-sdk"
   dependencies:
-    "@changesets/cli": "npm:^2.27.1"
     "@types/bluebird": "npm:^3.5.42"
     "@types/json-bigint": "npm:^1.0.4"
     axios: "npm:^1.2.0"
@@ -8035,6 +8034,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "zus-js-sdk@workspace:."
   dependencies:
+    "@changesets/cli": "npm:^2.27.1"
     concurrently: "npm:^8.2.2"
   languageName: unknown
   linkType: soft

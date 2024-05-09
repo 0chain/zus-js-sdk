@@ -14,9 +14,10 @@
     "build:app": "cd ./example/webapp && yarn build",
     "build:lib": "cd ./lib/js-sdk && yarn build",
     "build": "yarn build:app && yarn build:lib",
-    "version": "cd ./lib/js-sdk && yarn version"
+    "publish": "yarn changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "concurrently": "^8.2.2"
   },
   "packageManager": "yarn@4.2.1"
