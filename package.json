@@ -13,8 +13,7 @@
     "dev": "concurrently \"yarn dev:app\" \"yarn dev:lib\"",
     "build:app": "cd ./example/webapp && yarn build",
     "build:lib": "cd ./lib/js-sdk && yarn build",
-    "build": "yarn build:app && yarn build:lib",
-    "version": "cd ./lib/js-sdk && yarn version"
+    "build": "yarn build:app && yarn build:lib"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
