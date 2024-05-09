@@ -1,6 +1,6 @@
 # @zerochain/zus-sdk
 
-## 0.5.9
+## 0.5.10
 
 ### Patch Changes
 

@@ -45,3 +45,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Export Error Logs as an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NPM error-logs
+          path: /home/runner/.npm/_logs
