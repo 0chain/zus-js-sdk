@@ -42,7 +42,6 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: yarn publish
-          cwd: lib/js-sdk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
