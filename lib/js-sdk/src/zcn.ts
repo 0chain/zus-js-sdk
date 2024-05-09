@@ -25,9 +25,7 @@ async function blsSign(hash: string) {
 
   const bytes = hexStringToByte(hash);
 
-  console.log("bridge.jsProxy.secretKey", bridge.jsProxy.secretKey);
   const sig = bridge.jsProxy.secretKey.sign(bytes);
-  console.log("sig", sig);
 
   if (!sig) {
     const errMsg = "err: wasm blsSign function failed to sign transaction";
@@ -35,7 +33,6 @@ async function blsSign(hash: string) {
     throw new Error(errMsg);
   }
 
-  console.log("sig.serializeToHexStr()", sig.serializeToHexStr());
   return sig.serializeToHexStr() as string;
 }
 
