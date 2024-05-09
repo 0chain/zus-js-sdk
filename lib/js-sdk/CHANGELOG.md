@@ -1,5 +1,11 @@
 # @zerochain/zus-sdk
 
+## 0.5.8
+
+### Patch Changes
+
+- f1629e4: Package.json changes
+
 ## 0.5.0
 
 ### Minor Changes
