@@ -1,5 +1,11 @@
 # @zerochain/zus-sdk
 
+## 0.5.9
+
+### Patch Changes
+
+- 1e2b2b9: Refactor: remove unused packages
+
 ## 0.5.8
 
 ### Patch Changes
