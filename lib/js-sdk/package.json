@@ -8,7 +8,8 @@
     "build": "tsc",
     "build:tsup": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "tsc --noEmit",
-    "release": "yarn build && yarn changeset publish",
+    "publish": "yarn changeset publish",
+    "buildpub": "yarn build && yarn publish",
     "version": "yarn changeset"
   },
   "main": "dist/index.js",
