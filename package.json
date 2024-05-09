@@ -13,9 +13,11 @@
     "dev": "concurrently \"yarn dev:app\" \"yarn dev:lib\"",
     "build:app": "cd ./example/webapp && yarn build",
     "build:lib": "cd ./lib/js-sdk && yarn build",
-    "build": "yarn build:app && yarn build:lib"
+    "build": "yarn build:app && yarn build:lib",
+    "publish": "yarn changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "concurrently": "^8.2.2"
   },
   "packageManager": "yarn@4.2.1"

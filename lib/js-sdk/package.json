@@ -37,7 +37,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
     "@types/bluebird": "^3.5.42",
     "@types/json-bigint": "^1.0.4",
     "tsup": "^6.5.0",
