@@ -17,7 +17,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
