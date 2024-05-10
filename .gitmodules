@@ -1,3 +1,6 @@
 [submodule "example/website"]
 	path = example/website
 	url = https://github.com/0chain/zus-example-website.git
+[submodule "example/next"]
+	path = example/next
+	url = https://github.com/0chain/zus-example-webapp.git

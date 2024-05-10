@@ -5,7 +5,7 @@
   "private": true,
   "workspaces": [
     "lib/js-sdk/",
-    "example/website/"
+    "example/*"
   ],
   "scripts": {
     "dev:app": "cd ./example/webapp && yarn dev",
