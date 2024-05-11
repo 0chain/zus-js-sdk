@@ -27,7 +27,7 @@ jobs:
           node-version: "lts/*"
           cache: "yarn"
 
-      - name: Add Git submodule present at example/webapp
+      - name: Add Git submodule present at example/*
         run: git submodule update --init --recursive
 
       - name: Installing dependencies

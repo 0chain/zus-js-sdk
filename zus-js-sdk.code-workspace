@@ -5,8 +5,12 @@
       "path": "."
     },
     {
-      "name": "JS webapp",
-      "path": "example/webapp/"
+      "name": "Static website",
+      "path": "example/website/"
+    },
+    {
+      "name": "Nextjs webapp",
+      "path": "example/next/"
     },
     {
       "name": "JS SDK lib",
