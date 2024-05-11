@@ -24,7 +24,6 @@ async function blsSign(hash: string) {
   }
 
   const bytes = hexStringToByte(hash);
-
   const sig = bridge.jsProxy.secretKey.sign(bytes);
 
   if (!sig) {
