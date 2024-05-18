@@ -1,5 +1,11 @@
 # @zerochain/zus-sdk
 
+## 0.5.12
+
+### Patch Changes
+
+- 982339c: Minor Patches
+
 ## 0.5.11
 
 ### Patch Changes
