@@ -5,15 +5,17 @@
   "private": true,
   "workspaces": [
     "lib/js-sdk/",
-    "example/website"
+    "example/*"
   ],
   "scripts": {
     "dev:site": "cd ./example/website && yarn dev",
     "dev:lib": "cd ./lib/js-sdk && yarn dev",
-    "dev": "concurrently \"yarn dev:site\" \"yarn dev:lib\"",
+    "dev:next": "cd ./example/next && yarn dev",
+    "dev": "concurrently \"yarn dev:site\" \"yarn dev:lib\" \"yarn dev:next\"",
     "build:site": "cd ./example/website && yarn build",
     "build:lib": "cd ./lib/js-sdk && yarn build",
-    "build": "yarn build:site && yarn build:lib",
+    "build:next": "cd ./example/next && yarn build",
+    "build": "yarn build:site && yarn build:lib && yarn build:next",
     "publish": "yarn changeset publish"
   },
   "devDependencies": {
