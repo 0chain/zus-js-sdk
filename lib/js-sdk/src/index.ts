@@ -13,7 +13,6 @@ import { sha3_256 } from "js-sha3";
 import { Buffer } from "buffer";
 import { AccountEntity, Bridge, UploadObject } from "./types";
 
-let bls = getBls();
 let goWasm: Bridge["__proxy__"] | undefined = undefined;
 const getWasm = () => {
   if (!goWasm) throw new Error("WASM not initialized. call init first");
@@ -39,11 +38,12 @@ const log = (...args: any) => shouldShowLogs && console.log(...args);
  *
  * @param config The configuration parameters for initializing the SDK.
  */
-export const init = async (config: string[]) => {
+export const init = async (config: (string | number)[]) => {
   if (!config.length) throw new Error("Missing configuration parameters");
 
   log("config", config);
-  domain = config[1]?.replace("https://", "")?.replace("http://", "")?.replace("/dns", "") || "";
+  const blockWorkerUrl = String(config[1]);
+  domain = blockWorkerUrl?.replace("https://", "")?.replace("http://", "")?.replace("/dns", "") || "";
 
   const wasm = await createWasm();
   log("wasm", wasm);
@@ -53,7 +53,7 @@ export const init = async (config: string[]) => {
   log(...config);
   await wasm.sdk.init(...config);
 
-  bls = getBls();
+  const bls = getBls();
   await bls.init(bls.BN254);
 
   goWasm = wasm;
@@ -107,6 +107,7 @@ export const getBalanceWasm = async (clientId: string) => {
 export const setWallet = async (clientID: string, privateKey: string, publicKey: string, mnemonic: string) => {
   log("START setWallet", { clientID, privateKey, publicKey, mnemonic });
   const goWasm = getWasm();
+  const bls = getBls();
   await goWasm.setWallet(bls, clientID, privateKey, publicKey, mnemonic);
   log("END setWallet", { clientID, privateKey, publicKey, mnemonic });
 };
@@ -801,6 +802,7 @@ const createWalletKeys = async (userMnemonic?: string) => {
   const seed = await bip39.mnemonicToSeed(mnemonic, "0chain-client-split-key");
   const buffer = new Uint8Array(seed);
 
+  const bls = getBls();
   const blsSecret = new bls.SecretKey();
   bls.setRandFunc(buffer);
   blsSecret.setLittleEndian(buffer);
