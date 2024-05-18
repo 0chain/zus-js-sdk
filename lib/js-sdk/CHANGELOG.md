@@ -1,5 +1,11 @@
 # @zerochain/zus-sdk
 
+## 0.5.13
+
+### Patch Changes
+
+- 1bbb1ac: SSR support
+
 ## 0.5.12
 
 ### Patch Changes
