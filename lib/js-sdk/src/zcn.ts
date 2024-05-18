@@ -3,8 +3,6 @@
 import { Bridge, UploadObject, globalCtx } from "./types";
 import { hexStringToByte } from "./utils";
 
-const g = globalCtx;
-
 /** BRIDGE SETUP START */
 
 /**
@@ -91,6 +89,8 @@ const maxTime = 10 * 1000;
  * @returns Bridge object. This is an easier way to refer to the Go WASM object.
  */
 const getBridge = (): Bridge => {
+  const g = globalCtx();
+
   const currBridge = g.__zcn_wasm__;
   if (currBridge) return currBridge;
 
@@ -133,6 +133,7 @@ const getProxy = (bridge: Bridge) => {
  * @returns A promise that resolves to the upload result.
  */
 async function bulkUpload(options: UploadObject[]) {
+  const g = globalCtx();
   const bridge = getBridge();
 
   const start = bridge.glob.index;
@@ -263,6 +264,8 @@ async function setWallet(bls: any, clientID: string, sk: string, pk: string, mne
  * @param go The Go instance.
  */
 async function loadWasm(go: InstanceType<Window["Go"]>) {
+  const g = globalCtx();
+
   // If instantiateStreaming doesn't exists, polyfill/create it on top of instantiate
   if (!WebAssembly?.instantiateStreaming) {
     WebAssembly.instantiateStreaming = async (resp, importObject) => {
@@ -293,6 +296,7 @@ export async function createWasm() {
     return bridge.__proxy__;
   }
 
+  const g = globalCtx();
   const go = new g.Go();
 
   loadWasm(go);

@@ -739,13 +739,13 @@ export const getTransactionResponse = (data: TxnData) => {
 };
 
 export const getBls = () => {
-  if (!globalCtx.bls) {
+  if (!globalCtx().bls) {
     throw new Error(
       'window.bls unavailable. Add `<script src="https://cdn.jsdelivr.net/gh/herumi/bls-wasm@v1.0.0/browser/bls.js"></script>` before accessing this'
     );
   }
 
-  return globalCtx.bls;
+  return globalCtx().bls;
 };
 
 /**
