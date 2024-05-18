@@ -10,7 +10,13 @@ declare global {
   }
 }
 
-export const globalCtx = window || globalThis || self;
+export const globalCtx = () => {
+  if (typeof window !== "undefined") return window || globalThis || self;
+  else {
+    console.error("Window object not available");
+    return {} as Window;
+  }
+};
 
 export type Bridge = {
   glob: {
