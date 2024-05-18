@@ -2999,7 +2999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zerochain/zus-sdk@workspace:lib/js-sdk":
+"@zerochain/zus-sdk@npm:^0.5.12, @zerochain/zus-sdk@npm:^0.5.13, @zerochain/zus-sdk@workspace:lib/js-sdk":
   version: 0.0.0-use.local
   resolution: "@zerochain/zus-sdk@workspace:lib/js-sdk"
   dependencies:
@@ -7633,6 +7633,7 @@ __metadata:
     "@svgr/webpack": "npm:^8.0.1"
     "@types/node": "npm:20.2.5"
     "@types/react": "npm:18.2.7"
+    "@zerochain/zus-sdk": "npm:^0.5.13"
     clsx: "npm:^1.2.1"
     date-fns: "npm:^2.30.0"
     eslint: "npm:8.31.0"
@@ -7723,13 +7724,6 @@ __metadata:
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 10/88eeb4da891e10b1318c4b2476b6e2ecbeb5ff97d946815ffea7794c31a89017c70d7f34b3c2ebf23ef4e9fc9fb99f7dffe36da22011b5b5c6ffa34f4873ec20
-  languageName: node
-  linkType: hard
-
-"notyf@npm:^3.10.0":
-  version: 3.10.0
-  resolution: "notyf@npm:3.10.0"
-  checksum: 10/52918b9c9eab64814d2b7e6bf576ff21eb226b307919e306382e9b02f59701c1139d9276434e67d7e2a99e9f2cf6aecef663c23140d1ef3f695550adc75c5c7a
   languageName: node
   linkType: hard
 
@@ -10414,11 +10408,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "website@workspace:example/website"
   dependencies:
+    "@zerochain/zus-sdk": "npm:^0.5.12"
     babel-loader: "npm:^9.1.2"
     concurrently: "npm:^8.2.2"
     include-media: "npm:^2.0.0"
     mime: "npm:^3.0.0"
-    notyf: "npm:^3.10.0"
     sass: "npm:^1.60.0"
     webpack: "npm:^5.75.0"
     webpack-cli: "npm:^5.0.1"

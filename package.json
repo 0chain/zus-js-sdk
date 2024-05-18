@@ -8,14 +8,12 @@
     "example/*"
   ],
   "scripts": {
-    "dev:site": "cd ./example/website && yarn dev",
     "dev:lib": "cd ./lib/js-sdk && yarn dev",
-    "dev:next": "cd ./example/next && yarn dev",
-    "dev": "concurrently \"yarn dev:site\" \"yarn dev:lib\" \"yarn dev:next\"",
-    "build:site": "cd ./example/website && yarn build",
+    "dev:site": "concurrently \"yarn dev:lib\" \"yarn workspace website dev\"",
+    "dev:next": "concurrently \"yarn dev:lib\" \"yarn workspace next dev\"",
     "build:lib": "cd ./lib/js-sdk && yarn build",
-    "build:next": "cd ./example/next && yarn build",
-    "build": "yarn build:site && yarn build:lib && yarn build:next",
+    "build:next": "yarn build:lib && yarn workspace next build",
+    "build:site": "yarn build:lib && yarn workspace website build",
     "publish": "yarn changeset publish"
   },
   "devDependencies": {

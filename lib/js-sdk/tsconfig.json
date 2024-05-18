@@ -19,8 +19,9 @@
     "noEmit": false,
     /* Output Configuration: */
     "outDir": "dist", // Specify the output directory for compiled files
-    "declaration": true // Generate declaration files (.d.ts)
+    "declaration": true, // Generate declaration files (.d.ts)
     /* If your code runs in the DOM: */
+    "preserveWatchOutput": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
