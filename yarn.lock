@@ -2999,7 +2999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zerochain/zus-sdk@npm:^0.5.12, @zerochain/zus-sdk@npm:^0.5.13, @zerochain/zus-sdk@workspace:lib/js-sdk":
+"@zerochain/zus-sdk@npm:^0.5.12, @zerochain/zus-sdk@workspace:lib/js-sdk":
   version: 0.0.0-use.local
   resolution: "@zerochain/zus-sdk@workspace:lib/js-sdk"
   dependencies:
@@ -7633,7 +7633,6 @@ __metadata:
     "@svgr/webpack": "npm:^8.0.1"
     "@types/node": "npm:20.2.5"
     "@types/react": "npm:18.2.7"
-    "@zerochain/zus-sdk": "npm:^0.5.13"
     clsx: "npm:^1.2.1"
     date-fns: "npm:^2.30.0"
     eslint: "npm:8.31.0"
