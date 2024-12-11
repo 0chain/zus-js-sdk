@@ -22,7 +22,7 @@ Other apps are [Bolt](https://bolt.holdings/), a wallet that is very secure with
 
 ## Get Started
 
-This sections aims at getting you started with the Züs SDK. For a detailed documentation and reference, please refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started).
+This sections aims at getting you started with the Züs SDK.
 
 - [Installation](#installation)
 - [SDK Reference](#sdk-reference)
@@ -73,8 +73,6 @@ yarn add @zerochain/zus-sdk
 ## SDK Reference
 
 Zus JS-sdk provides many functions for implemention blobber,allocation and file operation functionalities in web applications.
-
-- See [gitbook](https://docs.zus.network/guides/zus-js-sdk/sdk-reference) for extensive list.
 
 ## Usage
 
@@ -129,7 +127,31 @@ console.log(response);
 
 The `sendTransaction` function sends a transaction from the specified sender client to the recipient client with the specified value and note.
 
-Refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started) for detailed information about the usage and detailed references.
+## Example Applications
+
+Explore the following example applications to understand how the Züs JS SDK can be used in real-world scenarios:
+
+### **[Next.js Example Application](https://github.com/0chain/zus-example-webapp/tree/72c7a550a05323503691e69c0d36c1c227e7a4e8)**  
+This web application demonstrates integrating the Züs JS SDK with a Next.js project. It showcases key functionalities for interacting with the Züs blockchain, including wallet creation, allocation management, and token-based transactions.  
+
+**Supported Features**:  
+- **Bolt**: Integrates the cryptocurrency wallet functionality to manage ZCN and Ethereum tokens, including staking and rewards.  
+- **Vult**: Implements decentralized anonymous file-sharing where users can upload and securely share files.  
+
+Live Preview: [https://dev-zus-webapp.zus.network](https://dev-zus-webapp.zus.network)
+
+---
+
+### **[Static Website Example](https://github.com/0chain/zus-example-website)**  
+This static website illustrates how to use the Züs JS SDK to integrate decentralized storage into a traditional web app. It features real-time asset management using the Züs storage backend and IndexedDB caching for enhanced performance.  
+
+**Core Highlights**:  
+- Guide to downloading assets from Züs allocations using an `authTicket`.  
+- Integration of Züs storage for hosting website assets securely and efficiently.  
+- Step-by-step implementation of the Züs SDK methods, including wallet creation, file sharing, and asset caching in IndexedDB.  
+
+Live Preview: [https://dev-zus-website.zus.network](https://dev-zus-website.zus.network)
+
 
 ## Utilities
 
@@ -144,8 +166,6 @@ The Züs SDK also provides some utility functions that may be helpful during dev
 These utility functions can be imported and used as needed in your application.
 
 With the provided functions and utilities, developers can easily interact with the ZeroChain network, perform transactions, retrieve balances, and utilize various utility functions.
-
-Please refer to the [SDK documentation](https://docs.zus.network/guides/zus-js-sdk/get-started) for more details and usage examples.
 
 ## Contributing
 
