@@ -78,7 +78,7 @@ Zus JS-sdk provides many functions for implementing blobber, allocation and file
 
 For a detailed understanding of the functions provided by the JS SDK, please refer to the JS Doc comments in the [index.ts file](https://github.com/0chain/zus-js-sdk/blob/main/lib/js-sdk/src/index.ts)
 
-Most of the functions are well-documented using JS Docs comments, making it easy to understand their usage and parameters.
+Most of the exposed SDK functions are well-documented with JS Doc comments, detailing their usage, parameter types, and return types.
 
 ## Usage
 
