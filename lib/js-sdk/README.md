@@ -69,10 +69,17 @@ Add the zus-sdk package for use in your project
 ```
 yarn add @zerochain/zus-sdk
 ```
+Here's the updated **SDK Reference** section with the mentioned addition:
+
+---
 
 ## SDK Reference
 
 Zus JS-sdk provides many functions for implemention blobber,allocation and file operation functionalities in web applications.
+
+To get a comprehensive understanding of the functions exposed by the JS SDK, you can refer to the [index file](https://github.com/0chain/zus-js-sdk/blob/main/lib/js-sdk/src/index.ts) in the SDK repository. 
+
+Most of the functions are well-documented using JS Docs comments, making it easy to understand their usage and parameters.
 
 ## Usage
 
@@ -139,8 +146,6 @@ This web application demonstrates integrating the Züs JS SDK with a Next.js pro
 - **Vult**: Implements decentralized anonymous file-sharing where users can upload and securely share files.  
 
 Live Preview: [https://dev-zus-webapp.zus.network](https://dev-zus-webapp.zus.network)
-
----
 
 ### **[Static Website Example](https://github.com/0chain/zus-example-website)**  
 This static website illustrates how to use the Züs JS SDK to integrate decentralized storage into a traditional web app. It features real-time asset management using the Züs storage backend and IndexedDB caching for enhanced performance.  
