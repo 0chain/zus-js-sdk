@@ -69,7 +69,6 @@ Add the zus-sdk package for use in your project
 ```
 yarn add @zerochain/zus-sdk
 ```
-Here's the updated **SDK Reference** section with the mentioned addition:
 
 ---
 
