@@ -76,7 +76,7 @@ yarn add @zerochain/zus-sdk
 
 Zus JS-sdk provides many functions for implementing blobber, allocation and file operation functionalities in web applications.
 
-To get a comprehensive understanding of the functions exposed by the JS SDK, you can refer to the [index file](https://github.com/0chain/zus-js-sdk/blob/main/lib/js-sdk/src/index.ts) in the SDK repository. 
+For a detailed understanding of the functions provided by the JS SDK, please refer to the JS Doc comments in the [index.ts file](https://github.com/0chain/zus-js-sdk/blob/main/lib/js-sdk/src/index.ts)
 
 Most of the functions are well-documented using JS Docs comments, making it easy to understand their usage and parameters.
 
