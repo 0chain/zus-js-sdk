@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "checkJs": false,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2017",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "noEmit": false,
+    /* Output Configuration: */
+    "outDir": "dist", // Specify the output directory for compiled files
+    "declaration": true, // Generate declaration files (.d.ts)
+    /* If your code runs in the DOM: */
+    "preserveWatchOutput": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Static website",
+      "path": "example/website/"
+    },
+    {
+      "name": "Nextjs webapp",
+      "path": "example/next/"
+    },
+    {
+      "name": "JS SDK lib",
+      "path": "lib/js-sdk/"
+    }
+  ],
+  "settings": {
+    "terminal.integrated.cwd": "${workspaceFolder}",
+  }
+}
